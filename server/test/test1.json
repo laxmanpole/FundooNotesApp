@@ -1,0 +1,18 @@
+{
+    "register": {
+        "firstname": "Sanju",
+        "lastname": "pole",
+        "email": "sanju11@gmail.com",
+        "password": "123456789"
+    },
+    "login": {
+        "email": "sanju11@gmail.com",
+        "password": "123456789"
+    },
+    "forgotPassword": {
+        "email": "sanju11@gmail.com"
+    },
+    "resetPassword": {
+        "password": "1234567800"
+    }
+}

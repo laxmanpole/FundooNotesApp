@@ -22,6 +22,9 @@ var userService = require('../services/service')
 var jwt = require('jsonwebtoken');
 var gentoken = require('../middleware/token');
 var sendmail = require('../middleware/sendmail');
+var redis = require('redis');
+var client = redis.createClient();
+
 
 
 // To handle the registration of new user.
@@ -98,12 +101,24 @@ module.exports.login = (req, res) => {
                     });
                 } else {
                     var token = jwt.sign({ email: req.body.email, id: data[0]._id }, secret, { expiresIn: 86400000 });
+                    client.set('token', token);
+                    client.get('token', function(error, result) {
+                        if (error) throw error;
+                        console.log('GET result ->', result)
+                    });
                     return res.status(200).send({
                         message: data,
                         "token": token
+
                     });
+
                 }
             });
+            // client.on('error', function(err) {
+            //     console.log('Something went wrong ', err)
+            // });
+
+
         }
     } catch (err) {
         console.log(err);

@@ -4,13 +4,14 @@
     "description": "",
     "main": "server.js",
     "scripts": {
-        "test": "mocha",
+        "test": "./node_modules/.bin/mocha --reporter spec",
         "start": "nodemon server.js",
         "dev": "nodemon server.js"
     },
     "author": "Laxman Pole",
     "license": "ISC",
     "dependencies": {
+        "axios": "^0.18.0",
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.18.3",
         "chai": "^3.5.0",
@@ -26,12 +27,15 @@
         "mocha": "^2.5.3",
         "mongodb-schema": "^8.2.3",
         "mongoose": "^5.4.15",
+        "mongoose-url-shortener": "^1.0.1",
         "nodemailer": "^5.1.1",
         "nodemailer-express-handlebars": "^3.0.0",
         "npm": "^6.9.0",
+        "redis": "^2.8.0",
+        "response-time": "^2.3.2",
         "socket.io": "^2.2.0"
     },
     "devDependencies": {
-        "nodemon": "^1.18.10"
+        "nodemon": "^1.18.11"
     }
 }
