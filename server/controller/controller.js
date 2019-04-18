@@ -27,6 +27,7 @@ var client = redis.createClient();
 
 
 
+
 // To handle the registration of new user.
 //request from client and response from server.
 module.exports.register = (req, res) => {
@@ -50,15 +51,15 @@ module.exports.register = (req, res) => {
                         message: err
                     })
                 } else {
-                    console.log("data in controller========>", data._id);
+                    console.log("data in controller========>", data.email);
 
 
                     const payload = {
-                            user_id: data._id
+                            user_email: data.email
                         }
                         //  console.log(payload);
                     const obj = gentoken.GenerateToken(payload);
-                    const url = `http://localhost:3000/login/${obj.token}`;
+                    const url = `http://localhost:3000/verifyemail/${obj.token}`;
                     console.log("url in controller", url);
 
                     sendmail.sendEMailFunction(url, req.body.email);
@@ -66,7 +67,7 @@ module.exports.register = (req, res) => {
                     res.status(200).send({
                         success: true,
                         message: "User register successfully ",
-                        data: url
+
                     });
 
                 }
@@ -78,15 +79,38 @@ module.exports.register = (req, res) => {
         console.log(err);
     }
 };
-//To handle the Login for registered user.
-//request from client and response from server.
+module.exports.verifyEmail = (req, res) => {
+        try {
+            console.log("inside verifyemail");
+
+            userService.verifyEmail(req, (err, data) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).send({
+                        message: err
+                    })
+                } else {
+                    return res.status(200).send({
+                        message: data
+                    });
+                }
+
+            })
+
+            //}
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    //To handle the Login for registered user.
+    //request from client and response from server.
 module.exports.login = (req, res) => {
     try {
         console.log("req in controller", req.body);
 
         req.checkBody('email', 'Email is not valid').isEmail();
         req.checkBody('password', 'password is not valid').isLength({ min: 4 });
-        var secret = "adcgfft";
+        //var secretkey = "adcgfft";
         var errors = req.validationErrors();
         var response = {};
         if (errors) {
@@ -100,24 +124,30 @@ module.exports.login = (req, res) => {
                         message: err
                     });
                 } else {
-                    var token = jwt.sign({ email: req.body.email, id: data[0]._id }, secret, { expiresIn: 86400000 });
-                    client.set('token', token);
-                    client.get('token', function(error, result) {
+                    var token = jwt.sign({ id: data[0]._id }, 'secretkey', { expiresIn: 86400000 });
+                    var userId = data[0]._id;
+                    client.set(userId, token, redis.print);
+                    client.get(userId, function(error, result) {
                         if (error) throw error;
-                        console.log('GET result ->', result)
+                        console.log('Redis working properly ->', result)
                     });
+                    // client.hset("record", userId, token, redis.print); //token stored in redis
+                    // client.hgetall("record", function(error, result) {
+                    //     if (error) throw error;
+                    //     console.log('Redis working properly ->', result)
+                    // });
                     return res.status(200).send({
-                        message: data,
+                        "success": true,
+                        "message": "Login successfully",
+                        "userId": data[0]._id,
+                        "name": data[0].firstname,
+                        "email": data[0].email,
                         "token": token
 
                     });
 
                 }
             });
-            // client.on('error', function(err) {
-            //     console.log('Something went wrong ', err)
-            // });
-
 
         }
     } catch (err) {
@@ -162,7 +192,10 @@ module.exports.forgotPassword = (req, res) => {
 
                     sendmail.sendEMailFunction(url, req.body.email);
 
-                    res.status(200).send(url);
+                    res.status(200).send({
+                        "success": true,
+                        "message": "reset password link send to email"
+                    });
 
 
 
@@ -193,7 +226,8 @@ exports.resetPassword = (req, res) => {
                     })
                 } else {
                     return res.status(200).send({
-                        message: data
+                        "success": true,
+                        "message": "Password successfully modified"
                     });
                 }
 
@@ -204,4 +238,8 @@ exports.resetPassword = (req, res) => {
         console.log(err);
     }
 
-}
+};
+
+
+
+// Create and Save a new Note

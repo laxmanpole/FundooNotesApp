@@ -8,6 +8,7 @@ const app = express();
 var expressValidator = require('express-validator')
 app.use(expressValidator());
 
+
 //parse requests of content-type-application/X-WWW-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }))
 

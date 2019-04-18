@@ -8,6 +8,8 @@ var userSchema = new mongoSchema({
     "lastname": { type: String, required: [true, "LastName is required"] },
     "email": { type: String, required: [true, "Email is required"] },
     "password": { type: String, required: [true, "password is required"] },
+    "verifyemail": { type: Boolean },
+
 }, {
     timestamps: true
 });
@@ -39,9 +41,10 @@ usermodel.prototype.register = (body, callback) => {
                     "firstname": body.firstname,
                     "lastname": body.lastname,
                     "email": body.email,
-                    "password": hash(body.password)
+                    "password": hash(body.password),
+                    "verifyemail": false
                 });
-                newUser.save((err, result) => {
+                newUser.save((err, result) => { //save the user in database
                     if (err) {
                         console.log("error came");
                         console.log("error in model file", err);
@@ -62,12 +65,35 @@ usermodel.prototype.register = (body, callback) => {
     }
 
 }
+usermodel.prototype.verifyEmail = (req, callback) => {
+    //console.log("request------>", req.body);
+    try {
+        console.log(req.decoded.payload.user_email)
+            // updateOne() Updates a single document within the collection based on the filter.
+        user.updateOne({ email: req.decoded.payload.user_email }, { verifyemail: true }, (err, data) => {
+            if (err) {
+                console.log("Error in verifyemail ");
+                return callback(err);
+            } else {
+                return callback(null, data);
+            }
+        });
+    } catch (err) {
+        console.log(err);
+    }
+
+}
+
 usermodel.prototype.login = (body, callback) => {
     try {
         user.find({ "email": body.email }, (err, data) => {
             if (err) {
                 return callback(err);
             } else if (data.length > 0) {
+                console.log(data.verifyemail)
+                if (data[0].verifyemail == false) {
+                    return callback({ "message": 'email not verify' })
+                }
                 bcrypt.compare(body.password, data[0].password, (err, res) => {
                     if (err) {
                         return callback(err);
@@ -133,6 +159,8 @@ usermodel.prototype.resetPassword = (req, callback) => {
     }
 
 }
+
+
 
 
 module.exports = new usermodel();

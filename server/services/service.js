@@ -17,8 +17,18 @@
 *****************************************************************************************************/
 //import the usermodel
 var userModel = require('../model/usermodel')
+
 exports.register = (req, callback) => {
     userModel.register(req, (err, data) => {
+        if (err) {
+            return callback(err);
+        } else {
+            return callback(null, data);
+        }
+    })
+}
+exports.verifyEmail = (req, callback) => {
+    userModel.verifyEmail(req, (err, data) => {
         if (err) {
             return callback(err);
         } else {

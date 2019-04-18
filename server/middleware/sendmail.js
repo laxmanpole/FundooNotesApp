@@ -11,7 +11,7 @@ exports.sendEMailFunction = (url, email) => {
         from: process.env.username,
         to: email,
         subject: 'Fundoo-app password reset link ',
-        text: 'Please go through the e-mail verifaction link provided in this mail:\n\n' + url
+        text: 'Please go through the e-mail verification link provided in this mail:\n\n' + url
     };
     transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
