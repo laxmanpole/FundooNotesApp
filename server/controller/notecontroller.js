@@ -33,10 +33,73 @@ exports.createNote = (req, res) => {
         console.log(err);
     }
 };
+exports.addlabeltoNote = (req, res) => {
+    try {
+        response = {};
+        noteService.addlabeltoNote(req, (err, data) => {
+            if (err) {
+                response.status = false;
+                response.error = err;
+                return res.status(500).send({ response })
+            } else {
+                response.status = true;
+                response.data = data;
+                return res.status(200).send({ response })
+            }
+
+        })
+
+
+    } catch (err) {
+        console.log(err);
+    }
+};
+exports.removelabelfromNote = (req, res) => {
+    try {
+        response = {};
+        noteService.removelabelfromNote(req, (err, data) => {
+            if (err) {
+                response.status = false;
+                response.error = err;
+                return res.status(500).send({ response })
+            } else {
+                response.status = true;
+                response.data = data;
+                return res.status(200).send({ response })
+            }
+
+        })
+
+
+    } catch (err) {
+        console.log(err);
+    }
+};
 exports.updateNote = (req, res) => {
     try {
         response = {};
         noteService.updateNote(req, (err, data) => {
+            if (err) {
+                response.status = false;
+                response.error = err;
+                return res.status(500).send({ response })
+            } else {
+                response.status = true;
+                response.data = data;
+                return res.status(200).send({ response })
+            }
+
+        })
+
+
+    } catch (err) {
+        console.log(err);
+    }
+};
+exports.deleteNote = (req, res) => {
+    try {
+        response = {};
+        noteService.deleteNote(req, (err, data) => {
             if (err) {
                 response.status = false;
                 response.error = err;

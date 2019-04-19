@@ -52,46 +52,58 @@ labelmodel.prototype.create = (labelData, callback) => {
     }
 }
 labelmodel.prototype.findAll = (req, callback) => {
-    console.log("label data in labelmodel", req.body);
-    label.find({ userID: req.body.userID }, (err, data) => {
-        if (err) {
-            console.log("error in labelmodel", err);
-            return callback(err);
-        } else {
-            console.log("data in labelmodel", data);
-            return callback(null, data);
-        }
+    try {
+        console.log("label data in labelmodel", req.body);
+        label.find({ userID: req.body.userID }, (err, data) => {
+            if (err) {
+                console.log("error in labelmodel", err);
+                return callback(err);
+            } else {
+                console.log("data in labelmodel", data);
+                return callback(null, data);
+            }
 
-    })
+        })
+    } catch (err) {
+        console.log(err);
+    }
 
 
 }
 labelmodel.prototype.update = (req, callback) => {
-    console.log("label data in labelmodel", req.body);
-    var labelname = req.body.labelName;
-    label.updateOne({ _id: req.body._id }, { labelName: labelname }, (err, data) => {
-        if (err) {
-            console.log("error in labelmodel", err);
-            return callback(err);
-        } else {
-            console.log("data in labelmodel", data);
-            return callback(null, data);
-        }
+    try {
+        console.log("label data in labelmodel", req.body);
+        var labelname = req.body.labelName;
+        label.updateOne({ _id: req.body._id }, { labelName: labelname }, (err, data) => {
+            if (err) {
+                console.log("error in labelmodel", err);
+                return callback(err);
+            } else {
+                console.log("data in labelmodel", data);
+                return callback(null, data);
+            }
 
-    })
+        })
+    } catch (err) {
+        console.log(err)
+    }
 }
 labelmodel.prototype.delete = (req, callback) => {
-    console.log("label data in labelmodel", req.body);
-    label.deleteOne({ _id: req.body._id }, (err, data) => {
-        if (err) {
-            console.log("error in labelmodel", err);
-            return callback(err);
-        } else {
-            console.log("data in labelmodel", data);
-            return callback(null, data);
-        }
+    try {
+        console.log("label data in labelmodel", req.body);
+        label.deleteOne({ _id: req.body._id }, (err, data) => {
+            if (err) {
+                console.log("error in labelmodel", err);
+                return callback(err);
+            } else {
+                console.log("data in labelmodel", data);
+                return callback(null, data);
+            }
 
-    })
+        })
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 module.exports = new labelmodel();

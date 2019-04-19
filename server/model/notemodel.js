@@ -8,10 +8,10 @@ var noteSchema = new mongoSchema({
         type: mongoSchema.Types.ObjectId,
         ref: 'userSchema'
     },
-    labelsID: {
+    labelsID: [{
         type: mongoSchema.Types.ObjectId,
         ref: 'labelSchema'
-    },
+    }],
     Title: {
         type: String,
         required: true
@@ -60,20 +60,104 @@ notemodel.prototype.createNote = (noteData, callback) => {
         console.log(err);
     }
 }
-notemodel.prototype.updateNote = (req, callback) => {
-    console.log("label data in labelmodel", req.body);
-    var title = req.body.Title;
-    var description = req.body.Description;
-    console.log(description);
-    note.updateOne({ _id: req.body._id }, { Title: title, Description: description }, (err, data) => {
-        if (err) {
-            console.log("error in notemodel", err);
-            return callback(err);
-        } else {
-            console.log("data in notemodel", data);
-            return callback(null, data);
-        }
+notemodel.prototype.addlabeltoNote = (req, callback) => {
+    try {
+        console.log("label data in labelmodel", req.body);
+        var labelsID = req.body.labelsID;
+        var noteID = req.body._id;
+        note.find({ labelsID: labelsID }, (err, data) => {
+            if (err) {
+                console.log("error in note model");
+            } else if (data.length > 0) {
+                console.log("label is allready exist");
+            } else {
+                note.findOneAndUpdate({ _id: noteID }, { $push: { "labelsID": labelsID } }, (err, data) => {
+                    if (err) {
+                        console.log("error in notemodel", err);
+                        return callback(err);
+                    } else {
+                        console.log("data in notemodel", data);
+                        var res = data.labelsID;
+                        res.push(labelsID);
+                        data.labelsID = res;
 
-    })
+                        return callback(null, data);
+                    }
+
+                })
+            }
+        })
+    } catch (err) {
+        console.log(err);
+    }
 }
+notemodel.prototype.removelabelfromNote = (req, callback) => {
+    try {
+        console.log("label data in notemodel", req.body);
+        var labelsID = req.body.labelsID;
+        var noteID = req.body._id;
+        note.find({ labelsID: labelsID }, (err, data) => {
+
+            if (err) {
+                console.log("error in note model");
+            } else if (!data) {
+                console.log("pls provide noteid and lables id");
+            } else {
+                note.findOneAndUpdate({ _id: noteID }, { $pull: { "labelsID": labelsID } }, (err, data) => {
+                    if (err) {
+                        console.log("error in notemodel", err);
+                        return callback(err);
+                    } else {
+                        console.log("data in notemodel", data);
+                        var res = data.labelsID;
+                        res.pull(labelsID)
+                        data.labelsID = res;
+                        return callback(null, data);
+                    }
+
+                })
+            }
+        })
+    } catch (err) {
+        console.log(err);
+    }
+}
+notemodel.prototype.updateNote = (req, callback) => {
+    try {
+        console.log("label data in labelmodel", req.body);
+        var title = req.body.Title;
+        var description = req.body.Description;
+        console.log(description);
+        note.updateOne({ _id: req.body._id }, { Title: title, Description: description }, (err, data) => {
+            if (err) {
+                console.log("error in notemodel", err);
+                return callback(err);
+            } else {
+                console.log("data in notemodel", data);
+                return callback(null, data);
+            }
+
+        })
+    } catch (err) {
+        console.log(err);
+    }
+}
+notemodel.prototype.deleteNote = (req, callback) => {
+    try {
+        console.log("label data in labelmodel", req.body);
+        note.deleteOne({ _id: req.body._id }, (err, data) => {
+            if (err) {
+                console.log("error in labelmodel", err);
+                return callback(err);
+            } else {
+                console.log("data in labelmodel", data);
+                return callback(null, data);
+            }
+
+        })
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 module.exports = new notemodel();

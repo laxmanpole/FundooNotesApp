@@ -26,9 +26,12 @@ router.put('/update', labelcontroller.update);
 
 // Delete a label with labelId
 router.delete('/delete', labelcontroller.delete);
-
+//create a notes
 router.post('/createNote', middle.checkToken, notecontroller.createNote)
+router.put('/addlabeltoNote', notecontroller.addlabeltoNote)
+router.put('/romvelabelfromNote', notecontroller.removelabelfromNote)
 router.put('/updateNote', notecontroller.updateNote)
+router.delete('/deleteNote', notecontroller.deleteNote)
 
 
 module.exports = router;
