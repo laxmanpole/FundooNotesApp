@@ -1,7 +1,7 @@
 var labelService = require('../services/labelservice')
 
 
-exports.create = (req, res) => {
+exports.createLabel = (req, res) => {
     try {
         console.log("in label controller", req.body, req.decoded, typeof req.decoded.id);
         var response = {};
@@ -15,7 +15,7 @@ exports.create = (req, res) => {
                 labelName: req.body.labelName
 
             }
-            labelService.create(labelData, (err, data) => {
+            labelService.createLabel(labelData, (err, data) => {
                 if (err) {
                     response.status = false;
                     response.error = err;
@@ -37,11 +37,11 @@ exports.create = (req, res) => {
 };
 
 // Retrieve and return all lebel from the database.
-exports.findAll = (req, res) => {
+exports.findAllLabel = (req, res) => {
     try {
         array = [];
         response = {};
-        labelService.findAll(req, (err, data) => {
+        labelService.findAllLabel(req, (err, data) => {
             if (err) {
                 response.status = false;
                 response.error = err;
@@ -67,10 +67,10 @@ exports.findAll = (req, res) => {
 
 
 // Update a note identified by the noteId in the request
-exports.update = (req, res) => {
+exports.updateLabel = (req, res) => {
     try {
         response = {};
-        labelService.update(req, (err, data) => {
+        labelService.updateLabel(req, (err, data) => {
             if (err) {
                 response.status = false;
                 response.error = err;
@@ -90,10 +90,10 @@ exports.update = (req, res) => {
 };
 
 // Delete a note with the specified noteId in the request
-exports.delete = (req, res) => {
+exports.deleteLabel = (req, res) => {
     try {
         response = {};
-        labelService.delete(req, (err, data) => {
+        labelService.deleteLabel(req, (err, data) => {
             if (err) {
                 response.status = false;
                 response.error = err;

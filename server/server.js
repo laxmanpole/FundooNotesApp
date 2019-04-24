@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const router = require('./routes/route')
+const gitrouter = require('./routes/gitroute')
 const dbConfig = require('./dbconfig.js');
 const mongoose = require("mongoose")
 require('dotenv').config();
@@ -15,6 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 //parse requests of content-type-application/json
 app.use(bodyParser.json())
 app.use('/', router)
+app.use('/', gitrouter)
 
 
 // Configuring the database

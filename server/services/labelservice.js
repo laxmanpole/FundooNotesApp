@@ -1,7 +1,7 @@
 var labelModel = require('../model/labelmodel')
 
-exports.create = (req, callback) => {
-    labelModel.create(req, (err, data) => {
+exports.createLabel = (req, callback) => {
+    labelModel.createLabel(req, (err, data) => {
         if (err) {
             return callback(err);
         } else {
@@ -9,8 +9,8 @@ exports.create = (req, callback) => {
         }
     })
 }
-exports.findAll = (req, callback) => {
-    labelModel.findAll(req, (err, data) => {
+exports.findAllLabel = (req, callback) => {
+    labelModel.findAllLabel(req, (err, data) => {
         if (err) {
             return callback(err);
         } else {
@@ -18,8 +18,8 @@ exports.findAll = (req, callback) => {
         }
     })
 }
-exports.update = (req, callback) => {
-    labelModel.update(req, (err, data) => {
+exports.updateLabel = (req, callback) => {
+    labelModel.updateLabel(req, (err, data) => {
         if (err) {
             return callback(err);
         } else {
@@ -27,8 +27,8 @@ exports.update = (req, callback) => {
         }
     })
 }
-exports.delete = (req, callback) => {
-    labelModel.delete(req, (err, data) => {
+exports.deleteLabel = (req, callback) => {
+    labelModel.deleteLabel(req, (err, data) => {
         if (err) {
             return callback(err);
         } else {

@@ -23,7 +23,7 @@ function labelmodel() {
 
 }
 var label = mongoose.model('label', labelSchema);
-labelmodel.prototype.create = (labelData, callback) => {
+labelmodel.prototype.createLabel = (labelData, callback) => {
     try {
         console.log("label data in labelmodel", labelData.labelName);
         label.find({ 'labelName': labelData.labelName }, (err, data) => {
@@ -51,7 +51,7 @@ labelmodel.prototype.create = (labelData, callback) => {
         console.log(err);
     }
 }
-labelmodel.prototype.findAll = (req, callback) => {
+labelmodel.prototype.findAllLabel = (req, callback) => {
     try {
         console.log("label data in labelmodel", req.body);
         label.find({ userID: req.body.userID }, (err, data) => {
@@ -70,7 +70,7 @@ labelmodel.prototype.findAll = (req, callback) => {
 
 
 }
-labelmodel.prototype.update = (req, callback) => {
+labelmodel.prototype.updateLabel = (req, callback) => {
     try {
         console.log("label data in labelmodel", req.body);
         var labelname = req.body.labelName;
@@ -88,7 +88,7 @@ labelmodel.prototype.update = (req, callback) => {
         console.log(err)
     }
 }
-labelmodel.prototype.delete = (req, callback) => {
+labelmodel.prototype.deleteLabel = (req, callback) => {
     try {
         console.log("label data in labelmodel", req.body);
         label.deleteOne({ _id: req.body._id }, (err, data) => {

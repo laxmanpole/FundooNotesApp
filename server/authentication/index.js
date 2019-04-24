@@ -17,6 +17,7 @@ exports.checkToken = (req, res, next) => {
             // req decoded and next will pass the controllers
             else {
                 req.decoded = decoded;
+                console.log("token verify data====>", req.decoded)
                 next();
             }
         });

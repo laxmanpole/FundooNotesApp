@@ -4,11 +4,15 @@ var bcrypt = require('bcryptjs');
 // create instance of Schema
 var mongoSchema = mongoose.Schema;
 var userSchema = new mongoSchema({
-    "firstname": { type: String, required: [true, "First name is required"] },
-    "lastname": { type: String, required: [true, "LastName is required"] },
+    "firstname": { type: String }, // required: [true, "First name is required"] },
+    "lastname": { type: String }, // required: [true, "LastName is required"] },
     "email": { type: String, required: [true, "Email is required"] },
-    "password": { type: String, required: [true, "password is required"] },
+    "password": { type: String }, // required: [true, "password is required"] },
     "verifyemail": { type: Boolean },
+    "gitverify": { type: Boolean, default: false },
+    "gitID": { type: String },
+    "gitUsername": { type: String },
+    "access_token": { type: String }
 
 }, {
     timestamps: true
@@ -160,7 +164,50 @@ usermodel.prototype.resetPassword = (req, callback) => {
 
 }
 
+usermodel.prototype.gitverify = (req, callback) => {
+    console.log("request------>", req.decoded);
+    try {
+        user.find({}, (err, data) => {
 
+            if (err) {
+                console.log("Error in register user schema ");
+                return callback(err);
+            } else if (!data.length) {
+                response = { "error": true, "message": "gitID already exists " };
+                return callback(response);
+            } else {
+                const newUser = new user({
+
+                    "gitID": req.decoded.gitID,
+                    "firstname": " ",
+                    "lastname": " ",
+                    "gitUsername": req.decoded.gitUsername,
+                    "email": req.decoded.email,
+                    "gitverify": true,
+                    "access_token": req.decoded.access_token
+                });
+                newUser.save((err, result) => { //save the user in database
+                    if (err) {
+                        console.log("error came");
+                        console.log("error in model file", err);
+                        return callback(err);
+                    } else {
+
+                        console.log("data save successfully", result);
+                        console.log("registered successfully");
+                        callback(null, result);
+                        console.log("no return statements ..registered successfully");
+
+                    }
+                })
+            }
+        });
+    } catch (err) {
+        console.log(err);
+    }
+
+
+}
 
 
 module.exports = new usermodel();

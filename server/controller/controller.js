@@ -139,11 +139,12 @@ module.exports.login = (req, res) => {
                     return res.status(200).send({
                         "success": true,
                         "message": "Login successfully",
-                        "userId": data[0]._id,
-                        "name": data[0].firstname,
-                        "email": data[0].email,
-                        "token": token
-
+                        "data": {
+                            "userId": data[0]._id,
+                            "name": data[0].firstname,
+                            "email": data[0].email,
+                            "token": token
+                        }
                     });
 
                 }
