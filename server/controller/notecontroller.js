@@ -117,3 +117,36 @@ exports.deleteNote = (req, res) => {
         console.log(err);
     }
 };
+exports.reminder = (req, res) => {
+    try {
+        console.log("inside reminder");
+        req.checkBody('_id', '_id is not valid');
+
+        var errors = req.validationErrors();
+        var response = {};
+        if (errors) {
+            response.success = false;
+            response.error = errors;
+            return res.status(422).send(response);
+        } else {
+            noteService.reminder(req, (err, data) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).send({
+                        message: err
+                    })
+                } else {
+                    return res.status(200).send({
+                        "success": true,
+                        "message": ""
+                    });
+                }
+
+            })
+
+        }
+    } catch (err) {
+        console.log(err);
+    }
+
+};

@@ -61,7 +61,7 @@ router.get('/auth/github', (req, response) => {
                 console.log(res.data);
                 response.send(res.data)
 
-                var payload = { gitUsername: res.data.login, gitID: res.data.id }
+                var payload = { gitUsername: res.data.login, gitID: res.data.id, email: res.data.email, access_token: res.data.access_token }
                 const obj = gentoken.GenerateToken(payload);
                 const url = `http://localhost:3000/gitverify/${obj.token}`;
                 console.log("url in controller", url);

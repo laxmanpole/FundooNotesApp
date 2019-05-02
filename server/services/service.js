@@ -66,3 +66,12 @@ exports.resetPassword = (req, callback) => {
         }
     })
 }
+exports.setprofile = (req, callback) => {
+    userModel.setprofile(req, (err, data) => {
+        if (err) {
+            return callback(err);
+        } else {
+            return callback(null, data);
+        }
+    })
+}

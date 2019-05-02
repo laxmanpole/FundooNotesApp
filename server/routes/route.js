@@ -3,12 +3,13 @@ const router = express.Router();
 const cntuser = require('../controller/controller')
 const labelcontroller = require('../controller/labelcontroller')
 const notecontroller = require('../controller/notecontroller')
-const gitcontroller = require('../controller/gitcontoller')
+const profile = require('../controller/profilecontroller')
 const middle = require('../authentication/index')
-const axios = require('axios')
+const upload = require('../services/fileupload')
+    // const axios = require('axios')
 
-var sendmail = require('../middleware/sendmail');
-const jwt = require('jsonwebtoken')
+// var sendmail = require('../middleware/sendmail');
+// const jwt = require('jsonwebtoken')
 
 
 
@@ -39,6 +40,9 @@ router.put('/addlabeltoNote', notecontroller.addlabeltoNote)
 router.put('/romvelabelfromNote', notecontroller.removelabelfromNote)
 router.put('/updateNote', notecontroller.updateNote)
 router.delete('/deleteNote', notecontroller.deleteNote)
+
+router.post('/setprofile', upload.single('image'), middle.checkToken, profile.setprofile)
+router.post('/setreminder', notecontroller.reminder)
 
 
 

@@ -6,13 +6,14 @@ var mongoSchema = mongoose.Schema;
 var userSchema = new mongoSchema({
     "firstname": { type: String }, // required: [true, "First name is required"] },
     "lastname": { type: String }, // required: [true, "LastName is required"] },
-    "email": { type: String, required: [true, "Email is required"] },
+    "email": { type: String }, // required: [true, "Email is required"] },
     "password": { type: String }, // required: [true, "password is required"] },
     "verifyemail": { type: Boolean },
     "gitverify": { type: Boolean, default: false },
     "gitID": { type: String },
     "gitUsername": { type: String },
-    "access_token": { type: String }
+    "access_token": { type: String },
+    "profileurl": { type: String }
 
 }, {
     timestamps: true
@@ -178,13 +179,14 @@ usermodel.prototype.gitverify = (req, callback) => {
             } else {
                 const newUser = new user({
 
-                    "gitID": req.decoded.gitID,
+                    "gitID": req.decoded.payload.gitID,
                     "firstname": " ",
                     "lastname": " ",
-                    "gitUsername": req.decoded.gitUsername,
-                    "email": req.decoded.email,
+                    "gitUsername": req.decoded.payload.gitUsername,
+                    "email": req.decoded.payload.email,
                     "gitverify": true,
-                    "access_token": req.decoded.access_token
+                    "access_token": req.decoded.payload.access_token,
+                    "profileurl": ""
                 });
                 newUser.save((err, result) => { //save the user in database
                     if (err) {
@@ -208,6 +210,28 @@ usermodel.prototype.gitverify = (req, callback) => {
 
 
 }
+usermodel.prototype.setprofile = (req, callback) => {
+    console.log("req data in usermodel", req.decoded.payload, req.file.originalname, req.file.location)
+    image = req.file.originalname;
+    gitID = req.decoded.payload.gitID;
+    if (image != null) {
+        newimage = image;
+        console.log("newimage", newimage);
+    } else {
+        callback("image not found")
+    }
+    console.log("image found", gitID);
+    user.findOneAndUpdate({ gitID: gitID }, { $set: { profileurl: req.file.location } },
+        (err, result) => {
+            if (err) {
+                callback(err)
+            } else {
+                console.log("image upload successfully...", newimage, result)
+                return callback(null, req.file.location)
+            }
+        });
+}
+
 
 
 module.exports = new usermodel();
