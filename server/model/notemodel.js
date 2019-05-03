@@ -19,6 +19,10 @@ var noteSchema = new mongoSchema({
     Description: {
         type: String,
         required: true
+    },
+    reminder: {
+        type: Date
+
     }
 
 
@@ -144,13 +148,13 @@ notemodel.prototype.updateNote = (req, callback) => {
 }
 notemodel.prototype.deleteNote = (req, callback) => {
     try {
-        console.log("label data in labelmodel", req.body);
+        console.log("label data in notemodel", req.body);
         note.deleteOne({ _id: req.body._id }, (err, data) => {
             if (err) {
-                console.log("error in labelmodel", err);
+                console.log("error in notemodel", err);
                 return callback(err);
             } else {
-                console.log("data in labelmodel", data);
+                console.log("data in notemodel", data);
                 return callback(null, data);
             }
 
@@ -159,5 +163,41 @@ notemodel.prototype.deleteNote = (req, callback) => {
         console.log(err);
     }
 }
+notemodel.prototype.reminder = (req, callback) => {
+    try {
+        console.log(" data in notemodel", req.body);
+        var date = new Date(req.body.date);
+        note.findOneAndUpdate({ _id: req.body._id }, { $set: { reminder: date } }, (err, data) => {
+            if (err) {
+                console.log("error in notemodel", err);
+                return callback(err);
+            } else {
+                console.log("data in notemodel", data);
+                return callback(null, data);
+            }
+
+        })
+    } catch (err) {
+        console.log(err);
+    }
+}
+notemodel.prototype.deletereminder = (req, callback) => {
+    try {
+        console.log(" data in notemodel", req.body);
+        note.findOneAndUpdate({ _id: req.body._id }, { $set: { reminder: "" } }, (err, data) => {
+            if (err) {
+                console.log("error in notemodel", err);
+                return callback(err);
+            } else {
+                console.log("data in notemodel", data);
+                return callback(null, data);
+            }
+
+        })
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 
 module.exports = new notemodel();

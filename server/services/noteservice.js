@@ -45,3 +45,21 @@ exports.deleteNote = (req, callback) => {
         }
     })
 }
+exports.reminder = (req, callback) => {
+    noteModel.reminder(req, (err, data) => {
+        if (err) {
+            return callback(err);
+        } else {
+            return callback(null, data);
+        }
+    })
+}
+exports.deletereminder = (req, callback) => {
+    noteModel.deletereminder(req, (err, data) => {
+        if (err) {
+            return callback(err);
+        } else {
+            return callback(null, data);
+        }
+    })
+}

@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router();
-const gitcontroller = require('../controller/gitcontoller')
+const gitcontroller = require('../controller/gitcontroller')
 const middle = require('../authentication/index')
 const axios = require('axios')
 var gentoken = require('../middleware/token');
@@ -35,6 +35,7 @@ router.get('/auth/github', (req, response) => {
                 // redirect the user to the welcome page, along with the access token
                 //res.redirect(`/welcome.html?access_token=${accessToken}`)
             gettoken(accessToken)
+            reposetoken(accessToken)
         })
         .catch(error => {
             console.log(error.response)
@@ -77,6 +78,7 @@ router.get('/auth/github', (req, response) => {
                 console.log(error.response)
             });
     }
+
 })
 router.post('/gitverify/:token', middle.checkToken, gitcontroller.gitverify)
 

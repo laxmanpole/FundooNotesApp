@@ -121,7 +121,7 @@ exports.reminder = (req, res) => {
     try {
         console.log("inside reminder");
         req.checkBody('_id', '_id is not valid');
-
+        req.checkBody('Date', 'Date is not valid');
         var errors = req.validationErrors();
         var response = {};
         if (errors) {
@@ -138,7 +138,8 @@ exports.reminder = (req, res) => {
                 } else {
                     return res.status(200).send({
                         "success": true,
-                        "message": ""
+                        "message": "reminder set sucessfully",
+                        //"data": data
                     });
                 }
 
@@ -149,4 +150,25 @@ exports.reminder = (req, res) => {
         console.log(err);
     }
 
+};
+exports.deletereminder = (req, res) => {
+    try {
+        response = {};
+        noteService.deletereminder(req, (err, data) => {
+            if (err) {
+                response.status = false;
+                response.error = err;
+                return res.status(500).send({ response })
+            } else {
+                response.status = true;
+                response.message = "reminder deleted successfully";
+                return res.status(200).send({ response })
+            }
+
+        })
+
+
+    } catch (err) {
+        console.log(err);
+    }
 };
