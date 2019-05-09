@@ -76,3 +76,20 @@ describe('Status and content', function() {
         })
     })
 })
+describe('Status and content', function() {
+    describe('create label', function() {
+         var data1 = test();
+        it('status ', function(done) {
+            chai.request(server).post('/create').send(data1.createLabel).end((err, res) => {
+                if (err) {
+                    console.log("expect ==>", err);
+                    err.should.have.status(500);
+                } else {
+                    console.log("expect ==>", res.body);
+                    res.should.have.status(200);
+                }
+                done();
+            })
+        })
+    })
+})

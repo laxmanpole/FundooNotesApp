@@ -8,6 +8,15 @@ exports.createNote = (req, callback) => {
         }
     })
 }
+exports.findAllNote = (req, callback) => {
+    noteModel.findAllNote(req, (err, data) => {
+        if (err) {
+            return callback(err);
+        } else {
+            return callback(null, data);
+        }
+    })
+}
 
 exports.addlabeltoNote = (req, callback) => {
     noteModel.addlabeltoNote(req, (err, data) => {
@@ -56,6 +65,24 @@ exports.reminder = (req, callback) => {
 }
 exports.deletereminder = (req, callback) => {
     noteModel.deletereminder(req, (err, data) => {
+        if (err) {
+            return callback(err);
+        } else {
+            return callback(null, data);
+        }
+    })
+}
+exports.isArchive = (req, callback) => {
+    noteModel.isArchive(req, (err, data) => {
+        if (err) {
+            return callback(err);
+        } else {
+            return callback(null, data);
+        }
+    })
+}
+exports.isTrash = (req, callback) => {
+    noteModel.isTrash(req, (err, data) => {
         if (err) {
             return callback(err);
         } else {

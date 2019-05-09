@@ -166,28 +166,26 @@ usermodel.prototype.resetPassword = (req, callback) => {
 }
 
 usermodel.prototype.gitverify = (req, callback) => {
-    console.log("request------>", req.decoded);
+    // console.log("request------>", req);
     try {
-        user.find({}, (err, data) => {
+        user.find({ gitID: req.profile.id }, (err, data) => {
 
             if (err) {
                 console.log("Error in register user schema ");
                 return callback(err);
-            } else if (!data.length) {
-                response = { "error": true, "message": "gitID already exists " };
-                return callback(response);
             } else {
                 const newUser = new user({
-
-                    "gitID": req.decoded.payload.gitID,
+                    gitID: req.profile.id,
+                    gitUsername: req.profile.username,
+                    email: req.profile.emails[0].value,
+                    access_token: req.accessToken,
                     "firstname": " ",
                     "lastname": " ",
-                    "gitUsername": req.decoded.payload.gitUsername,
-                    "email": req.decoded.payload.email,
                     "gitverify": true,
-                    "access_token": req.decoded.payload.access_token,
                     "profileurl": ""
                 });
+                console.log("photo", req.profile.photos[0].value);
+
                 newUser.save((err, result) => { //save the user in database
                     if (err) {
                         console.log("error came");
@@ -197,8 +195,8 @@ usermodel.prototype.gitverify = (req, callback) => {
 
                         console.log("data save successfully", result);
                         console.log("registered successfully");
-                        callback(null, result);
-                        console.log("no return statements ..registered successfully");
+                        return callback(null, result);
+                        // console.log("no return statements ..registered successfully");
 
                     }
                 })
@@ -212,8 +210,8 @@ usermodel.prototype.gitverify = (req, callback) => {
 }
 usermodel.prototype.setprofile = (req, callback) => {
     console.log("req data in usermodel", req.decoded.payload, req.file.originalname, req.file.location)
-    image = req.file.originalname;
-    gitID = req.decoded.payload.gitID;
+    var image = req.file.originalname;
+    var gitID = req.decoded.payload.gitID;
     if (image != null) {
         newimage = image;
         console.log("newimage", newimage);

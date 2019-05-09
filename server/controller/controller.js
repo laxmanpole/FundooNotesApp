@@ -126,6 +126,8 @@ module.exports.login = (req, res) => {
                 } else {
                     var token = jwt.sign({ id: data[0]._id }, 'secretkey', { expiresIn: 86400000 });
                     var userId = data[0]._id;
+                    //console.log("res",res[0].body);
+                    
                     client.set(userId, token, redis.print);
                     client.get(userId, function(error, result) {
                         if (error) throw error;

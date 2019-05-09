@@ -3,6 +3,8 @@ var labelService = require('../services/labelservice')
 
 exports.createLabel = (req, res) => {
     try {
+    
+        
         console.log("in label controller", req.body, req.decoded, typeof req.decoded.id);
         var response = {};
         if (typeof req.decoded.id === "undefined") {
@@ -50,7 +52,7 @@ exports.findAllLabel = (req, res) => {
                 response.status = true;
                 response.userID = data[0].userID;
                 data.forEach(element => {
-                    array.push({ "labelName": element.labelName })
+                    array.push(element.labelName)
                 });
                 response.labelName = array;
                 return res.status(200).send({ response })

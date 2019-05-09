@@ -22,7 +22,7 @@
         "event-emitter": "^0.3.5",
         "events": "^3.0.0",
         "express": "^4.16.4",
-        "express-session": "^1.16.1",
+        "express-session": "^1.15.5",
         "express-validator": "^5.3.1",
         "joi": "^14.3.1",
         "json5": "^2.1.0",
@@ -37,6 +37,7 @@
         "nodemailer": "^5.1.1",
         "nodemailer-express-handlebars": "^3.0.0",
         "npm": "^6.9.0",
+        "passport": "^0.4.0",
         "passport-github": "^1.1.0",
         "redis": "^2.8.0",
         "superagent": "^5.0.2"

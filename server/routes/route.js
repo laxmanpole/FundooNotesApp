@@ -6,12 +6,6 @@ const notecontroller = require('../controller/notecontroller')
 const profile = require('../controller/profilecontroller')
 const middle = require('../authentication/index')
 const upload = require('../services/fileupload')
-    // const axios = require('axios')
-
-// var sendmail = require('../middleware/sendmail');
-// const jwt = require('jsonwebtoken')
-
-
 
 
 
@@ -36,6 +30,7 @@ router.put('/update', labelcontroller.updateLabel);
 router.delete('/delete', labelcontroller.deleteLabel);
 //create a notes
 router.post('/createNote', middle.checkToken, notecontroller.createNote)
+router.get('/findAllNote', notecontroller.findAllNote);
 router.put('/addlabeltoNote', notecontroller.addlabeltoNote)
 router.put('/romvelabelfromNote', notecontroller.removelabelfromNote)
 router.put('/updateNote', notecontroller.updateNote)
@@ -44,6 +39,8 @@ router.delete('/deleteNote', notecontroller.deleteNote)
 router.post('/setprofile', upload.single('image'), middle.checkToken, profile.setprofile)
 router.post('/setreminder', notecontroller.reminder)
 router.post('/deletereminder', notecontroller.deletereminder)
+router.post('/Archive', notecontroller.isArchive)
+router.post('/Trash', notecontroller.isTrash)
 
 
 

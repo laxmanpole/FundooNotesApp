@@ -63,7 +63,7 @@ labelmodel.prototype.findAllLabel = (req, callback) => {
                 return callback(null, data);
             }
 
-        })
+        }).sort({"labelName":1})
     } catch (err) {
         console.log(err);
     }

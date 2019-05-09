@@ -33,6 +33,33 @@ exports.createNote = (req, res) => {
         console.log(err);
     }
 };
+exports.findAllNote = (req, res) => {
+    try {
+        array = [];
+        response = {};
+        noteService.findAllNote(req, (err, data) => {
+            if (err) {
+                response.status = false;
+                response.error = err;
+                return res.status(500).send({ response })
+            } else {
+                response.status = true;
+                response.userID = data[0].userID;
+                data.forEach(element => {
+                    array.push(element.Title)
+                });
+                response.Title = array;
+                return res.status(200).send({ response })
+            }
+
+        })
+
+
+    } catch (err) {
+        console.log(err);
+    }
+};
+
 exports.addlabeltoNote = (req, res) => {
     try {
         response = {};
@@ -172,3 +199,47 @@ exports.deletereminder = (req, res) => {
         console.log(err);
     }
 };
+exports.isArchive = (req, res) => {
+    try {
+        console.log("inside verifyemail");
+
+        noteService.isArchive(req, (err, data) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).send({
+                    message: err
+                })
+            } else {
+                return res.status(200).send({
+                    message: data
+                });
+            }
+
+        })
+
+    } catch (err) {
+        console.log(err);
+    }
+};
+exports.isTrash = (req, res) => {
+    try {
+        console.log("inside verifyemail");
+
+        noteService.isTrash(req, (err, data) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).send({
+                    message: err
+                })
+            } else {
+                return res.status(200).send({
+                    message: data
+                });
+            }
+
+        })
+
+    } catch (err) {
+        console.log(err);
+    }
+}

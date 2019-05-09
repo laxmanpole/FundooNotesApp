@@ -4,6 +4,7 @@ const router = require('./routes/route')
 const gitrouter = require('./routes/gitroute')
 const dbConfig = require('./dbconfig.js');
 const mongoose = require("mongoose")
+const session = require('express-session')
 require('dotenv').config();
 const app = express();
 var expressValidator = require('express-validator')
@@ -18,6 +19,11 @@ app.use(bodyParser.json())
 app.use('/', router)
 app.use('/', gitrouter)
 
+app.use(session({
+    secret: 'bridgelabz developer',
+    resave: true,
+    saveUninitialized: true
+}));
 
 // Configuring the database
 
@@ -25,6 +31,7 @@ mongoose.Promise = global.Promise;
 
 // Connecting to the database
 mongoose.connect(dbConfig.url, {
+    useCreateIndex: true,
     useNewUrlParser: true
 }).then(() => {
     console.log("Successfully connected to the database");

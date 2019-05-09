@@ -1,6 +1,6 @@
 //import the mongoose and bcrypt module
 const mongoose = require('mongoose');
-// var userScheam = require('../model/usermodel');
+
 // create instance of Schema
 var mongoSchema = mongoose.Schema;
 var noteSchema = new mongoSchema({
@@ -22,6 +22,16 @@ var noteSchema = new mongoSchema({
     },
     reminder: {
         type: Date
+
+    },
+    isArchive: {
+        type: Boolean,
+        default: false,
+
+    },
+    isTrash: {
+        type: Boolean,
+        default: false,
 
     }
 
@@ -63,6 +73,25 @@ notemodel.prototype.createNote = (noteData, callback) => {
     } catch (err) {
         console.log(err);
     }
+}
+notemodel.prototype.findAllNote = (req, callback) => {
+    try {
+        console.log("note data in notemodel", req.body);
+        note.find({ userID: req.body.userID }, (err, data) => {
+            if (err) {
+                console.log("error in notemodel", err);
+                return callback(err);
+            } else {
+                console.log("data in notemodel", data);
+                return callback(null, data);
+            }
+
+        }).sort({ "Title": 1 })
+    } catch (err) {
+        console.log(err);
+    }
+
+
 }
 notemodel.prototype.addlabeltoNote = (req, callback) => {
     try {
@@ -165,7 +194,7 @@ notemodel.prototype.deleteNote = (req, callback) => {
 }
 notemodel.prototype.reminder = (req, callback) => {
     try {
-        console.log(" data in notemodel", req.body);
+        //console.log(" data in notemodel", req.body);
         var date = new Date(req.body.date);
         note.findOneAndUpdate({ _id: req.body._id }, { $set: { reminder: date } }, (err, data) => {
             if (err) {
@@ -183,8 +212,42 @@ notemodel.prototype.reminder = (req, callback) => {
 }
 notemodel.prototype.deletereminder = (req, callback) => {
     try {
-        console.log(" data in notemodel", req.body);
-        note.findOneAndUpdate({ _id: req.body._id }, { $set: { reminder: "" } }, (err, data) => {
+        //console.log(" data in notemodel", req.body);
+        note.findOneAndUpdate({ _id: req.body._id }, { $unset: { reminder: 1 } }, (err, data) => {
+            if (err) {
+                console.log("error in notemodel", err);
+                return callback(err);
+            } else {
+                console.log("data in notemodel", data);
+                return callback(null, data);
+            }
+
+        })
+    } catch (err) {
+        console.log(err);
+    }
+}
+notemodel.prototype.isArchive = (req, callback) => {
+    try {
+        //console.log(" data in notemodel", req.body);
+        note.findOneAndUpdate({ _id: req.body._id }, { $set: { isArchive: true } }, (err, data) => {
+            if (err) {
+                console.log("error in notemodel", err);
+                return callback(err);
+            } else {
+                console.log("data in notemodel", data);
+                return callback(null, data);
+            }
+
+        })
+    } catch (err) {
+        console.log(err);
+    }
+}
+notemodel.prototype.isTrash = (req, callback) => {
+    try {
+        //console.log(" data in notemodel", req.body);
+        note.findOneAndUpdate({ _id: req.body._id }, { $set: { isTrash: true } }, (err, data) => {
             if (err) {
                 console.log("error in notemodel", err);
                 return callback(err);
