@@ -165,7 +165,7 @@ usermodel.prototype.resetPassword = (req, callback) => {
 
 }
 
-usermodel.prototype.gitverify = (req, callback) => {
+usermodel.prototype.gitOauth = (req, callback) => {
     // console.log("request------>", req);
     try {
         user.find({ gitID: req.profile.id }, (err, data) => {
@@ -181,7 +181,7 @@ usermodel.prototype.gitverify = (req, callback) => {
                     access_token: req.accessToken,
                     "firstname": " ",
                     "lastname": " ",
-                    "gitverify": true,
+                    "gitverify": "false",
                     "profileurl": ""
                 });
                 console.log("photo", req.profile.photos[0].value);
@@ -206,6 +206,24 @@ usermodel.prototype.gitverify = (req, callback) => {
         console.log(err);
     }
 
+
+}
+usermodel.prototype.gitverify = (req, callback) => {
+    //console.log("request------>", req.body);
+    try {
+        console.log(req.decoded.id)
+            // updateOne() Updates a single document within the collection based on the filter.
+        user.updateOne({ _id: req.decoded.id }, { gitverify: true }, (err, data) => {
+            if (err) {
+                console.log("Error in gitverify ");
+                return callback(err);
+            } else {
+                return callback(null, data);
+            }
+        });
+    } catch (err) {
+        console.log(err);
+    }
 
 }
 usermodel.prototype.setprofile = (req, callback) => {

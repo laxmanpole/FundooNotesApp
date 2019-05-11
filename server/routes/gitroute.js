@@ -2,11 +2,11 @@
  const router = express.Router();
  const passport = require('passport')
  const GithubStrategy = require('passport-github')
-
+ var jwt = require('jsonwebtoken');
  const usermodel = require('../model/usermodel')
  const gitcontroller = require('../controller/gitcontroller')
-     // const middle = require('../authentication/index')
-     // const axios = require('axios')
+ const middle = require('../authentication/index')
+ const axios = require('axios')
      // var gentoken = require('../middleware/token');
      // var sendmail = require('../middleware/sendmail');
 
@@ -85,37 +85,137 @@
  //     }
 
  // })
- // router.post('/gitverify/:token', middle.checkToken, gitcontroller.gitverify)
+
+
+
 
 
  passport.use(new GithubStrategy({
          clientID: process.env.client_id,
          clientSecret: process.env.client_secret,
-         callbackURL: process.env.redirect_uri
+         callbackURL: process.env.redirect_uri,
+         scope: 'repo'
      },
      function(accessToken, refreshToken, profile, done) {
-         console.log("profile", profile);
+         //console.log("profile", profile);
 
          var req = { accessToken, profile }
-         console.log("req : ", req);
-
-         usermodel.gitverify(req, (err, data) => {
+         usermodel.gitOauth(req, (err, data) => {
              if (err) {
                  console.log(err)
              } else {
-                 console.log("data=====>", data);
+                 console.log("data=====>", data.id);
+                 var token = jwt.sign({ id: data.id }, 'secretkey', { expiresIn: 86400000 });
+                 client.set("Key" + data.id, token, redis.print);
+                 client.get("Key" + data.id, function(error, result) {
+                     if (error) throw error;
+                     console.log('Redis working properly ->', result)
+                 });
+                 done(JSON.stringify(token));
              }
          })
-         done(JSON.stringify(profile));
+
+
      }));
 
- router.route('/').get(passport.authenticate('github', { scope: ['user:email'] }));
+ router.route('/').get(passport.authenticate('github', { scope: 'repo' }));
  router.route('/auth/github').get(passport.authenticate('github'), function(req, res) {
-     //console.log("response : ", req);
-     //res.send("success", req.user);
-
+     //console.log("response : ", res);
 
  });
 
+ router.post('/gitverify/:token', middle.checkToken, gitcontroller.gitverify)
+
+
+
+ router.post('/createRef', (req, response) => {
+     console.log("fjhbf", req.headers.authorization)
+         //var  accessToken = req.headers.token;
+     axios({
+
+         // make a POST request
+         method: 'get',
+         // to the Github authentication API, with the client ID, client secret
+         // and request token
+         url: `https://api.github.com/repos/laxmanpole/javascript/git/refs/heads`,
+         // Set the content type header, so that we get the response in JSOn
+         headers: {
+             Authorization: req.headers.authorization,
+             accept: 'application/json'
+         }
+     }).then((res) => {
+         // Once we get the response, extract the access token from
+         // the response body
+
+         console.log("token=====>", res.data[0].object.sha, req.body.ref, req.headers.authorization);
+         //response.send(res.data)
+         createBranch(req.body.ref, res.data[0].object.sha, req.headers.authorization);
+
+     })
+
+     function createBranch(ref, sha, token) {
+         console.log("asdgvasj=======>", token);
+         console.log("shaaaaa ====== > ", sha);
+         axios({
+                 // make a POST request
+                 method: 'post',
+                 // to the Github authentication API, with the client ID, client secret
+                 // and request token
+                 url: `https://api.github.com/repos/laxmanpole/javascript/git/refs`,
+                 // Set the content type header, so that we get the response in JSOn
+                 headers: {
+                     Authorization: token,
+                     accept: 'application/json'
+                 },
+                 data: {
+                     "ref": ref,
+                     "sha": sha
+                 }
+             }).then((res) => {
+                 // Once we get the response, extract the access token from
+                 // the response body
+
+                 //console.log("token=====>", res.data[0].object.sha);
+                 console.log("response bitch======================", res.data);
+
+                 response.send(res.data)
+
+             })
+             .catch(error => {
+                 console.log(error.response)
+             });
+
+     }
+ })
+
+ router.post('/deleteBranch', (req, response) => {
+     //console.log("fjhbf", req.headers.authorization)
+     //var accessToken = req.header.authorization;
+     axios({
+
+             // make a POST request
+             method: 'delete',
+             // to the Github authentication API, with the client ID, client secret
+             // and request token
+             url: `https://api.github.com/repos/laxmanpole/javascript/git/refs`,
+             // Set the content type header, so that we get the response in JSOn
+             headers: {
+                 Authorization: req.headers.authorization,
+                 accept: 'application/json'
+             },
+
+         }).then((res) => {
+             // Once we get the response, extract the access token from
+             // the response body
+
+             //console.log("token=====>", res.data[0].object.sha);
+             response.send(res.data)
+
+         })
+         .catch(error => {
+             console.log(error.response)
+         });
+
+ })
 
  module.exports = router;

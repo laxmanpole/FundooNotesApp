@@ -3,8 +3,8 @@ var labelService = require('../services/labelservice')
 
 exports.createLabel = (req, res) => {
     try {
-    
-        
+
+
         console.log("in label controller", req.body, req.decoded, typeof req.decoded.id);
         var response = {};
         if (typeof req.decoded.id === "undefined") {

@@ -5,6 +5,8 @@ const gitrouter = require('./routes/gitroute')
 const dbConfig = require('./dbconfig.js');
 const mongoose = require("mongoose")
 const session = require('express-session')
+redis = require('redis');
+client = redis.createClient();
 require('dotenv').config();
 const app = express();
 var expressValidator = require('express-validator')

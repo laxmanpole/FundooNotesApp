@@ -1,7 +1,7 @@
 var gitService = require('../services/gitservice')
 module.exports.gitverify = (req, res) => {
     try {
-        console.log("inside verifyemail");
+        console.log("inside gitverify");
 
         gitService.gitverify(req, (err, data) => {
             if (err) {
