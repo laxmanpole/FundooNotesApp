@@ -184,7 +184,7 @@ usermodel.prototype.gitOauth = (req, callback) => {
                     "gitverify": "false",
                     "profileurl": ""
                 });
-                console.log("photo", req.profile.photos[0].value);
+                //console.log("photo", req.profile.photos[0].value);
 
                 newUser.save((err, result) => { //save the user in database
                     if (err) {
@@ -227,9 +227,9 @@ usermodel.prototype.gitverify = (req, callback) => {
 
 }
 usermodel.prototype.setprofile = (req, callback) => {
-    console.log("req data in usermodel", req.decoded.payload, req.file.originalname, req.file.location)
+    console.log("req data in usermodel", req.decoded, req.file.originalname, req.file.location)
     var image = req.file.originalname;
-    var gitID = req.decoded.payload.gitID;
+    var gitID = req.decoded.gitID;
     if (image != null) {
         newimage = image;
         console.log("newimage", newimage);

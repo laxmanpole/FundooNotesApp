@@ -21,8 +21,8 @@ var noteSchema = new mongoSchema({
         required: true
     },
     reminder: {
-        type: Date
-
+        type: Date,
+        required: true
     },
     isArchive: {
         type: Boolean,

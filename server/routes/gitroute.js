@@ -31,7 +31,7 @@ passport.use(new GithubStrategy({
         })
     }))
 
-router.route('/').get(passport.authenticate('github', { scope: 'repo' }))
+router.route('/github').get(passport.authenticate('github', { scope: 'repo' }))
 router.route('/auth/github').get(passport.authenticate('github'))
 
 router.post('/gitverify/:token', middle.checkToken, gitcontroller.gitverify)
@@ -57,10 +57,10 @@ router.post('/createBranch', (req, response) => {
 
         console.log('data=====>', res.data[0].object.sha, req.body.ref, req.headers.authorization)
             // response.send(res.data)
-        createBranch(req.body.ref, res.data[0].object.sha, req.headers.authorization, req.body.repoName)
+        createBranch(req.body.ref, res.data[0].object.sha, req.headers.authorization, req.body.reposName)
     })
 
-    function createBranch(ref, sha, token, repoName) {
+    function createBranch(ref, sha, token, reposName) {
         console.log('token=======>', token)
         console.log('shaaaaa ====== > ', sha)
         axios({
@@ -68,7 +68,7 @@ router.post('/createBranch', (req, response) => {
                 method: 'post',
                 // to the Github authentication API, with the client ID, client secret
                 // and request token
-                url: `https://api.github.com/repos/${process.env.owner}/${repoName}/git/refs`,
+                url: `https://api.github.com/repos/${process.env.owner}/${reposName}/git/refs`,
                 // Set the content type header, so that we get the response in JSOn
                 headers: {
                     Authorization: token,
@@ -102,7 +102,7 @@ router.post('/deleteBranch', (req, response) => {
             method: 'delete',
             // to the Github authentication API, with the client ID, client secret
             // and request token
-            url: `https://api.github.com/repos/${process.env.owner}/javascript/git/refs/heads/${ req.body.branchName}`,
+            url: `https://api.github.com/repos/${process.env.owner}/${req.body.reposName}//git/refs/heads/${ req.body.branchName}`,
             // Set the content type header, so that we get the response in JSOn
             headers: {
                 Authorization: req.headers.authorization,

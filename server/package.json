@@ -11,6 +11,7 @@
     "author": "Laxman Pole",
     "license": "ISC",
     "dependencies": {
+        "async": "^2.6.2",
         "aws-sdk": "^2.441.0",
         "axios": "^0.18.0",
         "bcryptjs": "^2.4.3",
@@ -44,7 +45,7 @@
         "superagent": "^5.0.2"
     },
     "devDependencies": {
-        "nodemon": "^1.18.11",
+        "nodemon": "^1.19.0",
         "sonarqube": "0.0.1",
         "sonarqube-scanner": "^2.4.0"
     }

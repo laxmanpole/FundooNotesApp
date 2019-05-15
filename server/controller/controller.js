@@ -21,6 +21,7 @@ var userService = require('../services/service')
 var jwt = require('jsonwebtoken')
 var gentoken = require('../middleware/token')
 var sendmail = require('../middleware/sendmail')
+var async = require('async')
 
 // To handle the registration of new user.
 // request from client and response from server.
@@ -38,32 +39,43 @@ module.exports.register = (req, res) => {
             response.error = errors
             return res.status(422).send(response)
         } else {
-            userService.register(req.body, (err, data) => {
+            let tasks = [
+
+                userService.register(req.body, (err, data) => {
+                    if (err) {
+                        console.log(err)
+                        return res.status(500).send({
+                            message: err
+                        })
+                    } else {
+                        console.log('data in controller========>', data.email)
+
+                        const payload = {
+                                user_email: data.email
+                            }
+                            //  console.log(payload)
+                        const obj = gentoken.GenerateToken(payload)
+                        const url = `http://localhost:3000/verifyemail/${obj.token}`
+                        console.log('url in controller', url)
+
+                        sendmail.sendEMailFunction(url, req.body.email)
+
+                        // res.status(200).send({
+                        //     success: true,
+                        //     message: 'User register successfully '
+
+                        // })
+                    }
+                })
+            ]
+            let res = async.series(tasks, (err, results) => {
                 if (err) {
-                    console.log(err)
-                    return res.status(500).send({
-                        message: err
-                    })
-                } else {
-                    console.log('data in controller========>', data.email)
-
-                    const payload = {
-                            user_email: data.email
-                        }
-                        //  console.log(payload)
-                    const obj = gentoken.GenerateToken(payload)
-                    const url = `http://localhost:3000/verifyemail/${obj.token}`
-                    console.log('url in controller', url)
-
-                    sendmail.sendEMailFunction(url, req.body.email)
-
-                    res.status(200).send({
-                        success: true,
-                        message: 'User register successfully '
-
-                    })
+                    console.log(err);
                 }
+                console.log(results[2]); // this gets executed with proper results
+                return results[2];
             })
+            return res;
         }
     } catch (err) {
         console.log(err)
