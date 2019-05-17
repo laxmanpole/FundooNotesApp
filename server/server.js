@@ -42,7 +42,7 @@ mongoose.connect(dbConfig.url, {
 })
 
 // listen for requests
-app.listen(process.env.port, () => {
+app.listen(process.env.PORT, () => {
         console.log('Server is listening on port 3000')
     })
     // app.get('/', (req, res) => res.send('Hello World!'))

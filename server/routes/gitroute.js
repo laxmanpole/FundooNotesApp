@@ -9,9 +9,9 @@ const middle = require('../authentication/index')
 const axios = require('axios')
 
 passport.use(new GithubStrategy({
-        clientID: process.env.client_id,
-        clientSecret: process.env.client_secret,
-        callbackURL: process.env.redirect_uri,
+        clientID: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        callbackURL: process.env.REDIRECT_URI,
         scope: 'repo'
     },
     function(accessToken, refreshToken, profile, done) {
@@ -24,7 +24,7 @@ passport.use(new GithubStrategy({
                 done(err)
             } else {
                 console.log('data=====>', data.id)
-                var token = jwt.sign({ id: data.id }, 'secretkey', { expiresIn: 86400000 })
+                var token = jwt.sign({ id: data.id }, process.env.SECRETKEY, { expiresIn: 86400000 })
                 client.set('Key' + data.id, token, redis.print)
                 done(JSON.stringify(token))
             }
@@ -45,7 +45,7 @@ router.post('/createBranch', (req, response) => {
         method: 'get',
         // to the Github authentication API, with the client ID, client secret
         // and request token
-        url: `https://api.github.com/repos/${process.env.owner}/${req.body.repoName}/git/refs/heads`,
+        url: `https://api.github.com/repos/${process.env.OWNER}/${req.body.repoName}/git/refs/heads`,
         // Set the content type header, so that we get the response in JSOn
         headers: {
             Authorization: req.headers.authorization,
@@ -68,7 +68,7 @@ router.post('/createBranch', (req, response) => {
                 method: 'post',
                 // to the Github authentication API, with the client ID, client secret
                 // and request token
-                url: `https://api.github.com/repos/${process.env.owner}/${reposName}/git/refs`,
+                url: `https://api.github.com/repos/${process.env.OWNER}/${reposName}/git/refs`,
                 // Set the content type header, so that we get the response in JSOn
                 headers: {
                     Authorization: token,
@@ -102,7 +102,7 @@ router.post('/deleteBranch', (req, response) => {
             method: 'delete',
             // to the Github authentication API, with the client ID, client secret
             // and request token
-            url: `https://api.github.com/repos/${process.env.owner}/${req.body.reposName}//git/refs/heads/${ req.body.branchName}`,
+            url: `https://api.github.com/repos/${process.env.OWNER}/${req.body.reposName}//git/refs/heads/${ req.body.branchName}`,
             // Set the content type header, so that we get the response in JSOn
             headers: {
                 Authorization: req.headers.authorization,
@@ -131,7 +131,7 @@ router.post('/starRepo', (req, response) => {
             method: 'put',
             // to the Github authentication API, with the client ID, client secret
             // and request token
-            url: `https://api.github.com/user/starred/${process.env.owner}/${ req.body.reposName}`,
+            url: `https://api.github.com/user/starred/${process.env.OWNER}/${ req.body.reposName}`,
             // Set the content type header, so that we get the response in JSOn
             headers: {
                 Authorization: req.headers.authorization,
@@ -160,7 +160,7 @@ router.post('/unstarRepo', (req, response) => {
             method: 'delete',
             // to the Github authentication API, with the client ID, client secret
             // and request token
-            url: `https://api.github.com/user/starred/${process.env.owner}/${ req.body.reposName}`,
+            url: `https://api.github.com/user/starred/${process.env.OWNER}/${ req.body.reposName}`,
             // Set the content type header, so that we get the response in JSOn
             headers: {
                 Authorization: req.headers.authorization,
@@ -190,7 +190,7 @@ router.post('/watchRepo', (req, response) => {
             method: 'put',
             // to the Github authentication API, with the client ID, client secret
             // and request token
-            url: `https://api.github.com/repos/${process.env.owner}/${ req.body.reposName}/subscription?subscribed=${ req.query.subscribed}&ignored=${ req.query.ignored}`,
+            url: `https://api.github.com/repos/${process.env.OWNER}/${ req.body.reposName}/subscription?subscribed=${ req.query.subscribed}&ignored=${ req.query.ignored}`,
             // Set the content type header, so that we get the response in JSOn
             headers: {
                 Authorization: req.headers.authorization,
@@ -221,7 +221,7 @@ router.post('/unwatchRepo', (req, response) => {
             method: 'delete',
             // to the Github authentication API, with the client ID, client secret
             // and request token
-            url: `https://api.github.com/repos/${process.env.owner}/${ req.body.reposName}/subscription?subscribed=${ req.query.subscribed}&ignored=${ req.query.ignored}`,
+            url: `https://api.github.com/repos/${process.env.OWNER}/${ req.body.reposName}/subscription?subscribed=${ req.query.subscribed}&ignored=${ req.query.ignored}`,
             // Set the content type header, so that we get the response in JSOn
             headers: {
                 Authorization: req.headers.authorization,

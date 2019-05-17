@@ -5,6 +5,7 @@
         "email": "sanju11@gmail.com",
         "password": "123456789"
     },
+
     "login": {
         "email": "sanju11@gmail.com",
         "password": "123456789"
@@ -16,7 +17,13 @@
         "password": "1234567800"
     },
     "createLabel": {
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjYWRjZmM5N2NhYzE2MTY2YTVjM2YzNyIsImlhdCI6MTU1NzEyNjgzMiwiZXhwIjoxNjQzNTI2ODMyfQ.iW4b4OptWqA-JmulRdu8uKn21MrfTxW-HgeNatndv4g",
-        "labelName": "serious"
+        "labelName": "god"
+    },
+    "updateLabel": {
+        "labelName": "Program"
+    },
+    "deleteLabel": {
+        "labelName": "Program"
     }
+
 }

@@ -39,43 +39,72 @@ module.exports.register = (req, res) => {
             response.error = errors
             return res.status(422).send(response)
         } else {
-            let tasks = [
+            var rsp = {}
+            const tasks = [
+                function registerUser(callback) {
+                    userService.register(req.body, (err, data) => {
+                        if (err) {
+                            return callback(err)
+                        } else {
+                            console.log('data==>', data)
+                            rsp = data
+                                // console.log('data22==>', rsp)
+                            return callback(null, data)
+                        }
+                    })
+                },
+                function sendMail(callback) {
+                    console.log('data aaraha hai==>', rsp.email)
+                    const payload = {
+                        user_email: rsp.email
+                    }
+                    console.log(payload)
+                    const obj = gentoken.GenerateToken(payload)
+                    const url = `http://localhost:3000/verifyemail/${obj.token}`
+                    console.log('url in controller', url)
 
-                userService.register(req.body, (err, data) => {
+                    var info = sendmail.sendEMailFunction(url, rsp.email)
+                    return callback(null, obj.token)
+                }
+            ]
+
+            async.series(tasks, (err, results) => {
+                    // console.log("result mil gaya===>", results)
                     if (err) {
                         console.log(err)
-                        return res.status(500).send({
-                            message: err
-                        })
+                        return (err)
                     } else {
-                        console.log('data in controller========>', data.email)
-
-                        const payload = {
-                                user_email: data.email
-                            }
-                            //  console.log(payload)
-                        const obj = gentoken.GenerateToken(payload)
-                        const url = `http://localhost:3000/verifyemail/${obj.token}`
-                        console.log('url in controller', url)
-
-                        sendmail.sendEMailFunction(url, req.body.email)
-
-                        // res.status(200).send({
-                        //     success: true,
-                        //     message: 'User register successfully '
-
-                        // })
+                        console.log('result mil gaya===>', results) // this gets executed with proper results
+                        return res.json(results[1])
                     }
                 })
-            ]
-            let res = async.series(tasks, (err, results) => {
-                if (err) {
-                    console.log(err);
-                }
-                console.log(results[2]); // this gets executed with proper results
-                return results[2];
-            })
-            return res;
+                // userService.register(req.body, (err, data) => {
+                //     if (err) {
+                //         console.log(err)
+                //         return res.status(500).send({
+                //             message: err
+                //         })
+                //     } else {
+                //         console.log('data in controller========>', data.email)
+
+            //         const payload = {
+            //                 user_email: data.email
+            //             }
+            //             //  console.log(payload)
+            //         const obj = gentoken.GenerateToken(payload)
+            //         const url = `http://localhost:3000/verifyemail/${obj.token}`
+            //         console.log('url in controller', url)
+
+            //         sendmail.sendEMailFunction(url, req.body.email)
+
+            //         res.status(200).send({
+            //             success: true,
+            //             message: 'User register successfully '
+
+            //         })
+            //     }
+            // })
+
         }
     } catch (err) {
         console.log(err)
@@ -119,38 +148,70 @@ module.exports.login = (req, res) => {
                 response.error = errors
                 return res.status(422).send(response)
             } else {
-                userService.login(req.body, (err, data) => {
-                    if (err) {
-                        return res.status(500).send({
-                            message: err
-                        })
-                    } else {
-                        var token = jwt.sign({ id: data[0]._id }, 'secretkey', { expiresIn: 86400000 })
-                        var userId = data[0]._id
-                            // console.log("res",res[0].body)
+                var data1 = {}
+                async.series([
+                            function(callback) {
+                                userService.login(req.body, (err, data) => {
+                                    if (err) {
+                                        callback(null, err)
+                                    } else {
+                                        console.log('series data===>', data[0]._id)
+                                        data1 = data
+                                        callback(null, data)
+                                    }
+                                })
+                            },
+                            function(callback) {
+                                var token = jwt.sign({ id: data1[0]._id }, process.env.SECRETKEY, { expiresIn: 86400000 })
+                                var userId = data1[0]._id
 
-                        client.set(userId, token, redis.print)
-                        client.get(userId, function(error, result) {
-                                if (error) throw error
-                                console.log('Redis working properly ->', result)
-                            })
-                            // client.hset("record", userId, token, redis.print) //token stored in redis
-                            // client.hgetall("record", function(error, result) {
-                            //     if (error) throw error
-                            //     console.log('Redis working properly ->', result)
-                            // })
-                        return res.status(200).send({
-                            'success': true,
-                            'message': 'Login successfully',
-                            'data': {
-                                'userId': data[0]._id,
-                                'name': data[0].firstname,
-                                'email': data[0].email,
-                                'token': token
+                                client.set(userId, token, redis.print)
+                                callback(null, token)
                             }
+                        ],
+                        // optional callback
+                        function(err, results) {
+                            if (err) {
+                                console.log(err)
+                                return res.json(err)
+                            } else {
+                                console.log(results)
+                                return res.json(results)
+                            }
+
                         })
-                    }
-                })
+                    //     userService.login(req.body, (err, data) => {
+                    //         if (err) {
+                    //             return res.status(500).send({
+                    //                 message: err
+                    //             })
+                    //         } else {
+                    //             var token = jwt.sign({ id: data[0]._id }, process.env.SECRETKEY, { expiresIn: 86400000 })
+                    //             var userId = data[0]._id
+                    //                 // console.log("res",res[0].body)
+
+                //             client.set(userId, token, redis.print)
+                //             client.get(userId, function(error, result) {
+                //                     if (error) throw error
+                //                     console.log('Redis working properly ->', result)
+                //                 })
+                //                 // client.hset("record", userId, token, redis.print) //token stored in redis
+                //                 // client.hgetall("record", function(error, result) {
+                //                 //     if (error) throw error
+                //                 //     console.log('Redis working properly ->', result)
+                //                 // })
+                //             return res.status(200).send({
+                //                 'success': true,
+                //                 'message': 'Login successfully',
+                //                 'data': {
+                //                     'userId': data[0]._id,
+                //                     'name': data[0].firstname,
+                //                     'email': data[0].email,
+                //                     'token': token
+                //                 }
+                //             })
+                //         }
+                //     })
             }
         } catch (err) {
             console.log(err)
@@ -194,7 +255,8 @@ module.exports.forgotPassword = (req, res) => {
 
                         res.status(200).send({
                             'success': true,
-                            'message': 'reset password link send to email'
+                            'message': 'reset password link send to email',
+                            'token': obj.token
                         })
                     }
                 })

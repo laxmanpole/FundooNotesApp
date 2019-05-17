@@ -20,8 +20,8 @@ exports.createLabel = (req, res) => {
                     response.error = err
                     return res.status(500).send({ response })
                 } else {
-                    response.status = true
-                    response.data = data
+                    //response.status = true
+                    response = data
                     return res.status(200).send({ response })
                 }
             })

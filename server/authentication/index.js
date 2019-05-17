@@ -7,7 +7,7 @@ exports.checkToken = (req, res, next) => {
 
     if (token1) {
         // verifies secret and checks exp
-        jwt.verify(token1, 'secretkey', (err, decoded) => {
+        jwt.verify(token1, process.env.SECRETKEY, (err, decoded) => {
             if (err) {
                 return res.send({
                     success: false,

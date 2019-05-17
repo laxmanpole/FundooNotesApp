@@ -9,7 +9,7 @@ var userSchema = new mongoSchema({
     "email": { type: String }, // required: [true, "Email is required"] },
     "password": { type: String }, // required: [true, "password is required"] },
     "verifyemail": { type: Boolean },
-    "gitverify": { type: Boolean, default: false },
+    "gitverify": { type: Boolean },
     "gitID": { type: String },
     "gitUsername": { type: String },
     "access_token": { type: String },
@@ -56,10 +56,10 @@ usermodel.prototype.register = (body, callback) => {
                         return callback(err);
                     } else {
                         console.log(body.firstname);
-                        console.log("data save successfully", result);
-                        console.log("registered successfully");
+                        // console.log("data save successfully", result);
+                        //console.log("registered successfully");
                         callback(null, result);
-                        console.log("no return statements ..registered successfully");
+                        //console.log("no return statements ..registered successfully");
 
                     }
                 })
@@ -96,9 +96,9 @@ usermodel.prototype.login = (body, callback) => {
                 return callback(err);
             } else if (data.length > 0) {
                 console.log(data.verifyemail)
-                if (data[0].verifyemail == false) {
-                    return callback({ "message": 'email not verify' })
-                }
+                    // if (data[0].verifyemail == false) {
+                    //     return callback({ "message": 'email not verify' })
+                    // }
                 bcrypt.compare(body.password, data[0].password, (err, res) => {
                     if (err) {
                         return callback(err);

@@ -7,9 +7,9 @@ require('dotenv').config();
 
 
 const s3 = new aws.S3({
-        secretAccessKey: process.env.secretAccessKey,
-        accessKeyId: process.env.accessKeyId,
-        region: process.env.region
+        secretAccessKey: process.env.SECRETACCESSKEY,
+        accessKeyId: process.env.ACCESSKEYID,
+        region: process.env.REGION
     })
     //check the type of file
 const fileFilter = (req, file, callback) => {
@@ -24,11 +24,11 @@ const upload = multer({
     fileFilter,
     storage: multerS3({
         s3: s3,
-        bucket: 'myfundoo',//The bucket used to store the file
-        metadata: function(req, file, callback) {//The metadata object to be sent to S3
+        bucket: 'myfundoo', //The bucket used to store the file
+        metadata: function(req, file, callback) { //The metadata object to be sent to S3
             callback(null, { fieldName: file.fieldname });
         },
-        key: function(req, file, callback) {//The name of the file
+        key: function(req, file, callback) { //The name of the file
             callback(null, Date.now().toString())
         }
     })
