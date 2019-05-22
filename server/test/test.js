@@ -18,8 +18,9 @@ function test() {
 }
 
 describe('Status and content', function() {
+    var data1 = test();
     describe('Registration page', function() {
-        var data1 = test();
+
         it('status ', function(done) {
             chai.request(server).post('/register').send(data1.register).end((err, res) => {
                 if (err) {
@@ -27,7 +28,7 @@ describe('Status and content', function() {
                     err.should.have.status(500);
                 } else {
                     console.log("registration token ==>", res.body);
-                    rtoken = res.body.token
+                    //var rtoken = res.body.token
                     res.should.have.status(200);
                 }
                 done();
@@ -51,17 +52,17 @@ describe('Status and content', function() {
     //     })
     // });
     describe('login page', function() {
-        var data1 = test();
+        //var data1 = test();
         it('status ', function(done) {
             chai.request(server).post('/login').send(data1.login).end((err, res) => {
                 if (err) {
                     console.log("expect ==>", err);
                     err.should.have.status(500);
                 } else {
-                    console.log("expect ==>", res.body);
-                    ltoken = res.body.data.token
-                    console.log("userid mil raha hai===>", res.body.data.userId)
-                    userID = res.body.data.userId
+                    console.log("expect ==>", res.body[1].token);
+                    ltoken = res.body[1].token
+                    console.log("userid mil raha hai===>", res.body[0][0]._id)
+                    userID = res.body[0][0]._id
                     res.should.have.status(200);
                 }
                 done();
@@ -69,7 +70,7 @@ describe('Status and content', function() {
         })
     });
     describe('forgot Password', function() {
-        var data1 = test();
+        // var data1 = test();
         it('status ', function(done) {
             chai.request(server).post('/forgotPassword').send(data1.forgotPassword).end((err, res) => {
                 if (err) {
@@ -85,7 +86,7 @@ describe('Status and content', function() {
         })
     });
     describe('reset Password', function() {
-        var data1 = test();
+        //var data1 = test();
         it('status ', function(done) {
             chai.request(server).post(`/resetPassword/${ftoken}`).set('token', ftoken).send(data1.resetPassword).end((err, res) => {
                 if (err) {
@@ -101,8 +102,9 @@ describe('Status and content', function() {
     });
 })
 describe('Status and content', function() {
+    var data1 = test();
     describe('create label', function() {
-        var data1 = test();
+
         it('status ', function(done) {
             chai.request(server).post('/create').set('token', ltoken).send(data1.createLabel).end((err, res) => {
                 if (err) {
@@ -120,7 +122,7 @@ describe('Status and content', function() {
     });
 
     describe('findall label', function() {
-        var data1 = test();
+        // var data1 = test();
         it('status ', function(done) {
             chai.request(server).get('/findAll').send({ "userID": userID }).end((err, res) => {
                 if (err) {
@@ -136,7 +138,7 @@ describe('Status and content', function() {
     });
 
     describe('update label', function() {
-        var data1 = test();
+        //var data1 = test();
         var labelName = data1.updateLabel.labelName
         it('status ', function(done) {
             chai.request(server).put('/update').send({ "labelName": labelName, "_id": labelID }).end((err, res) => {
@@ -153,10 +155,60 @@ describe('Status and content', function() {
     });
 
     describe('delete label', function() {
-        var data1 = test();
+        //var data1 = test();
         var labelName = data1.updateLabel.labelName
         it('status ', function(done) {
             chai.request(server).delete('/delete').send({ "labelName": labelName, "_id": labelID }).end((err, res) => {
+                if (err) {
+                    console.log("expect ==>", err);
+                    err.should.have.status(500);
+                } else {
+                    console.log("expect ==>", res.body);
+                    res.should.have.status(200);
+                }
+                done();
+            })
+        })
+    });
+})
+describe('Status and content', function() {
+    var data1 = test();
+    describe('create note', function() {
+
+        it('status ', function(done) {
+            chai.request(server).post('/createNote').set('token', ltoken).send(data1.createnote).end((err, res) => {
+                if (err) {
+                    console.log("expect ==>", err);
+                    err.should.have.status(500);
+                } else {
+                    console.log("expect ==>", res.body);
+                    console.log("label id ==>", res.body.response);
+                    // labelID = res.body.response._id
+                    res.should.have.status(200);
+                }
+                done();
+            })
+        })
+    });
+    describe('find All note', function() {
+
+        it('status ', function(done) {
+            chai.request(server).get('/findAllNote').set('token', ltoken).end((err, res) => {
+                if (err) {
+                    console.log("expect ==>", err);
+                    err.should.have.status(500);
+                } else {
+                    console.log("expect ==>", res.body);
+                    res.should.have.status(200);
+                }
+                done();
+            })
+        })
+    });
+    describe('Add label to note', function() {
+
+        it('status ', function(done) {
+            chai.request(server).post('/addlabeltoNote').send(data1.addlabeltoNote).end((err, res) => {
                 if (err) {
                     console.log("expect ==>", err);
                     err.should.have.status(500);

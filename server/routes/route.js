@@ -4,6 +4,7 @@ const cntuser = require('../controller/controller')
 const labelcontroller = require('../controller/labelcontroller')
 const notecontroller = require('../controller/notecontroller')
 const profile = require('../controller/profilecontroller')
+const colab = require('../controller/colabcontroller')
 const middle = require('../authentication/index')
 const upload = require('../services/fileupload')
 
@@ -30,7 +31,7 @@ router.put('/update', labelcontroller.updateLabel);
 router.delete('/delete', labelcontroller.deleteLabel);
 //create a notes
 router.post('/createNote', middle.checkToken, notecontroller.createNote)
-router.get('/findAllNote', notecontroller.findAllNote);
+router.get('/findAllNote', middle.checkToken, notecontroller.findAllNote);
 router.put('/addlabeltoNote', notecontroller.addlabeltoNote)
 router.put('/romvelabelfromNote', notecontroller.removelabelfromNote)
 router.put('/updateNote', notecontroller.updateNote)
@@ -41,6 +42,8 @@ router.post('/setreminder', notecontroller.reminder)
 router.post('/deletereminder', notecontroller.deletereminder)
 router.post('/Archive', notecontroller.isArchive)
 router.post('/Trash', notecontroller.isTrash)
+
+router.post('/noteColabarate', middle.checkToken, colab.notecollab)
 
 
 

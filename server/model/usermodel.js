@@ -38,7 +38,7 @@ usermodel.prototype.register = (body, callback) => {
                 console.log("Error in register user schema ");
                 return callback(err);
             } else if (data.length > 0) {
-                response = { "error": true, "message": "Email already exists ", "errorCode": 404 };
+                var response = { "error": true, "message": "Email already exists ", "errorCode": 404 };
                 return callback(response);
             } else {
                 const newUser = new user({
@@ -91,28 +91,31 @@ usermodel.prototype.verifyEmail = (req, callback) => {
 
 usermodel.prototype.login = (body, callback) => {
     try {
+        var obj = {};
+        console.log("data in ==>", body)
         user.find({ "email": body.email }, (err, data) => {
             if (err) {
                 return callback(err);
             } else if (data.length > 0) {
-                console.log(data.verifyemail)
-                    // if (data[0].verifyemail == false) {
-                    //     return callback({ "message": 'email not verify' })
-                    // }
+                // console.log(data.verifyemail)
+                // if (data[0].verifyemail == false) {
+                //     return callback({ "message": 'email not verify' })
+                // }
                 bcrypt.compare(body.password, data[0].password, (err, res) => {
                     if (err) {
                         return callback(err);
                     } else if (res) {
                         console.log(data);
+                        obj = data;
                         console.log("congratz...!login successfully");
-                        return callback(null, data);
+                        return callback(null, obj);
                     } else {
                         console.log("incorrect password please check it once ");
                         return callback("Incorrect password").status(500);
                     }
                 });
             } else {
-                console.log(body.username);
+                console.log(body.email);
                 console.log(body.password);
                 console.log("username is not in database please check it.")
                 return callback("Invalid User");
@@ -231,7 +234,7 @@ usermodel.prototype.setprofile = (req, callback) => {
     var image = req.file.originalname;
     var gitID = req.decoded.gitID;
     if (image != null) {
-        newimage = image;
+        var newimage = image;
         console.log("newimage", newimage);
     } else {
         callback("image not found")
@@ -250,4 +253,5 @@ usermodel.prototype.setprofile = (req, callback) => {
 
 
 
-module.exports = new usermodel();
+module.exports = new usermodel()
+    //module.exports = mongoose.model('user', userSchema)

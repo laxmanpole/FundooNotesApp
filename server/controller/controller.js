@@ -54,20 +54,17 @@ module.exports.register = (req, res) => {
                     })
                 },
                 function sendMail(callback) {
-                    console.log('data aaraha hai==>', rsp.email)
+                    // console.log('data aaraha hai==>', rsp.email)
                     const payload = {
-                        user_email: rsp.email
-                    }
-                    console.log(payload)
+                            user_email: rsp.email
+                        }
+                        // console.log(payload)
                     const obj = gentoken.GenerateToken(payload)
                     const url = `http://localhost:3000/verifyemail/${obj.token}`
-                    console.log('url in controller', url)
-
-                    var info = sendmail.sendEMailFunction(url, rsp.email)
+                    sendmail.sendEMailFunction(url, rsp.email)
                     return callback(null, obj.token)
                 }
             ]
-
             async.series(tasks, (err, results) => {
                     // console.log("result mil gaya===>", results)
                     if (err) {
@@ -75,7 +72,7 @@ module.exports.register = (req, res) => {
                         return (err)
                     } else {
                         console.log('result mil gaya===>', results) // this gets executed with proper results
-                        return res.json(results[1])
+                        return res.json(results)
                     }
                 })
                 // userService.register(req.body, (err, data) => {
@@ -149,24 +146,27 @@ module.exports.login = (req, res) => {
                 return res.status(422).send(response)
             } else {
                 var data1 = {}
-                async.series([
+                async.parallel([
                             function(callback) {
                                 userService.login(req.body, (err, data) => {
                                     if (err) {
                                         callback(null, err)
                                     } else {
-                                        console.log('series data===>', data[0]._id)
+                                        console.log('series data===>', data)
                                         data1 = data
                                         callback(null, data)
                                     }
                                 })
                             },
                             function(callback) {
-                                var token = jwt.sign({ id: data1[0]._id }, process.env.SECRETKEY, { expiresIn: 86400000 })
-                                var userId = data1[0]._id
+                                setTimeout(function() {
+                                    var token = jwt.sign({ id: data1[0]._id }, process.env.SECRETKEY, { expiresIn: 86400000 })
+                                        //var userId = data1[0]._id
 
-                                client.set(userId, token, redis.print)
-                                callback(null, token)
+                                    // client.set(userId, token, redis.print)
+                                    callback(null, { "token": token });
+                                }, 400);
+
                             }
                         ],
                         // optional callback
@@ -180,38 +180,38 @@ module.exports.login = (req, res) => {
                             }
 
                         })
-                    //     userService.login(req.body, (err, data) => {
-                    //         if (err) {
-                    //             return res.status(500).send({
-                    //                 message: err
-                    //             })
-                    //         } else {
-                    //             var token = jwt.sign({ id: data[0]._id }, process.env.SECRETKEY, { expiresIn: 86400000 })
-                    //             var userId = data[0]._id
-                    //                 // console.log("res",res[0].body)
+                    // userService.login(req.body, (err, data) => {
+                    //     if (err) {
+                    //         return res.status(500).send({
+                    //             message: err
+                    //         })
+                    //     } else {
+                    //         var token = jwt.sign({ id: data[0]._id }, process.env.SECRETKEY, { expiresIn: 86400000 })
+                    //         var userId = data[0]._id
+                    //             // console.log("res",res[0].body)
 
-                //             client.set(userId, token, redis.print)
-                //             client.get(userId, function(error, result) {
-                //                     if (error) throw error
-                //                     console.log('Redis working properly ->', result)
-                //                 })
-                //                 // client.hset("record", userId, token, redis.print) //token stored in redis
-                //                 // client.hgetall("record", function(error, result) {
-                //                 //     if (error) throw error
-                //                 //     console.log('Redis working properly ->', result)
-                //                 // })
-                //             return res.status(200).send({
-                //                 'success': true,
-                //                 'message': 'Login successfully',
-                //                 'data': {
-                //                     'userId': data[0]._id,
-                //                     'name': data[0].firstname,
-                //                     'email': data[0].email,
-                //                     'token': token
-                //                 }
+                //         client.set(userId, token, redis.print)
+                //         client.get(userId, function(error, result) {
+                //                 if (error) throw error
+                //                 console.log('Redis working properly ->', result)
                 //             })
-                //         }
-                //     })
+                //             // client.hset("record", userId, token, redis.print) //token stored in redis
+                //             // client.hgetall("record", function(error, result) {
+                //             //     if (error) throw error
+                //             //     console.log('Redis working properly ->', result)
+                //             // })
+                //         return res.status(200).send({
+                //             'success': true,
+                //             'message': 'Login successfully',
+                //             'data': {
+                //                 'userId': data[0]._id,
+                //                 'name': data[0].firstname,
+                //                 'email': data[0].email,
+                //                 'token': token
+                //             }
+                //         })
+                //     }
+                // })
             }
         } catch (err) {
             console.log(err)
@@ -295,5 +295,3 @@ exports.resetPassword = (req, res) => {
         console.log(err)
     }
 }
-
-// Create and Save a new Note

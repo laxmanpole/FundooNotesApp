@@ -22,7 +22,7 @@ var noteSchema = new mongoSchema({
     },
     reminder: {
         type: Date,
-        required: true
+        //required: true
     },
     isArchive: {
         type: Boolean,
@@ -53,7 +53,7 @@ notemodel.prototype.createNote = (noteData, callback) => {
                 console.log("Error in noteschema ");
                 return callback(err);
             } else if (data.length > 0) {
-                response = { "error": true, "message": "Title already exists ", "errorCode": 404 };
+                var response = { "error": true, "message": "Title already exists ", "errorCode": 404 };
                 return callback(response);
             } else {
                 console.log("label data in notemodel", noteData);
@@ -77,7 +77,7 @@ notemodel.prototype.createNote = (noteData, callback) => {
 notemodel.prototype.findAllNote = (req, callback) => {
     try {
         console.log("note data in notemodel", req.body);
-        note.find({ userID: req.body.userID }, (err, data) => {
+        note.find({ userID: req.decoded.id }, (err, data) => {
             if (err) {
                 console.log("error in notemodel", err);
                 return callback(err);
@@ -97,7 +97,7 @@ notemodel.prototype.addlabeltoNote = (req, callback) => {
     try {
         console.log("label data in labelmodel", req.body);
         var labelsID = req.body.labelsID;
-        var noteID = req.body._id;
+        var noteID = req.body.noteID;
         note.find({ labelsID: labelsID }, (err, data) => {
             if (err) {
                 console.log("error in note model");
@@ -264,3 +264,4 @@ notemodel.prototype.isTrash = (req, callback) => {
 
 
 module.exports = new notemodel();
+//module.exports = mongoose.model('note', noteSchema);
