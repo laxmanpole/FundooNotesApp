@@ -35,6 +35,9 @@ var collabSchema = new schema({
 function collabmodel() {}
 var collab = mongoose.model('collab', collabSchema)
 
+/**
+ *@description 
+ */
 collabmodel.prototype.notecollab = (collabData, callback) => {
     try {
         console.log('data in collabmodel', collabData);

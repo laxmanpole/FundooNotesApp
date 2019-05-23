@@ -27,12 +27,42 @@
     },
     "createnote": {
         "labelsID": "5ccd5b70df77e54060db9b93",
-        "Title": "Dream",
-        "Description": "Indias biggest sport game"
+        "title": "Dream",
+        "description": "Indias biggest sport game"
     },
     "addlabeltoNote": {
-        "labelsID": "5ccd5b70df77e54060db9b93",
+        "labelsID": "5cb95d63636cdd47b5002ae9",
         "noteID": "5ccffb25af8fcb2e639711d9"
+    },
+    "removelabelfromNote": {
+        "labelsID": "5cb95d63636cdd47b5002ae9",
+        "noteID": "5ccffb25af8fcb2e639711d9"
+    },
+    "updateNote": {
+        "noteID": "5ccffb25af8fcb2e639711d9",
+        "title": "kabilbano",
+        "description": "do hard work"
+    },
+    "deleteNote": {
+        "noteID": "5ccc131fdfd60438ecfc0240"
+
+    },
+    "setreminder": {
+        "noteID": "5ccc131fdfd60438ecfc0240",
+        "date": "10-27-2020 04:05:12"
+
+    },
+    "deletereminder": {
+        "noteID": "5ccc131fdfd60438ecfc0240"
+
+    },
+    "isArchive": {
+        "noteID": "5ccc131fdfd60438ecfc0240"
+
+    },
+    "isTrash": {
+        "noteID": "5ccc131fdfd60438ecfc0240"
+
     }
 
 

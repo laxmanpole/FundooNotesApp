@@ -8,6 +8,9 @@ const gitcontroller = require('../controller/gitcontroller')
 const middle = require('../authentication/index')
 const axios = require('axios')
 
+/**
+ * 
+ */
 passport.use(new GithubStrategy({
         clientID: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET,
@@ -36,6 +39,9 @@ router.route('/auth/github').get(passport.authenticate('github'))
 
 router.post('/gitverify/:token', middle.checkToken, gitcontroller.gitverify)
 
+/**
+ * 
+ */
 router.post('/createBranch', (req, response) => {
     console.log('fjhbf', req.headers.authorization)
     axios({
@@ -122,32 +128,39 @@ router.post('/deleteBranch', (req, response) => {
             console.log(error.response)
         })
 })
+
+/**
+ * 
+ */
 router.post('/starRepo', (req, response) => {
-    console.log('fjhbf', req.headers.authorization, req.body.reposName)
-        // var accessToken = req.header.authorization
-    axios({
+        console.log('fjhbf', req.headers.authorization, req.body.reposName)
+            // var accessToken = req.header.authorization
+        axios({
 
-            // make a PUT request
-            method: 'put',
-            // to the Github authentication API, with the client ID, client secret
-            // and request token
-            url: `https://api.github.com/user/starred/${process.env.OWNER}/${ req.body.reposName}`,
-            // Set the content type header, so that we get the response in JSOn
-            headers: {
-                Authorization: req.headers.authorization,
-                accept: 'application/json'
-            }
+                // make a PUT request
+                method: 'put',
+                // to the Github authentication API, with the client ID, client secret
+                // and request token
+                url: `https://api.github.com/user/starred/${process.env.OWNER}/${ req.body.reposName}`,
+                // Set the content type header, so that we get the response in JSOn
+                headers: {
+                    Authorization: req.headers.authorization,
+                    accept: 'application/json'
+                }
 
-        }).then((res) => {
-            // Once we get the response, extract the access token from
-            console.log('rsponse main data hai', res)
+            }).then((res) => {
+                // Once we get the response, extract the access token from
+                console.log('rsponse main data hai', res)
 
-            response.send({ 'messgae': 'Repo starred sucessfully' })
-        })
-        .catch(error => {
-            console.log(error.response)
-        })
-})
+                response.send({ 'messgae': 'Repo starred sucessfully' })
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
+    })
+    /**
+     * 
+     */
 router.post('/unstarRepo', (req, response) => {
     console.log('fjhbf', req.headers.authorization, req.body.reposName)
         // var accessToken = req.header.authorization
@@ -178,6 +191,9 @@ router.post('/unstarRepo', (req, response) => {
         })
 })
 
+/**
+ * 
+ */
 router.post('/watchRepo', (req, response) => {
     console.log('fjhbf', req.headers.authorization, req.body.reposName, req.query.subscribed)
         // var accessToken = req.header.authorization
@@ -205,6 +221,9 @@ router.post('/watchRepo', (req, response) => {
         })
 })
 
+/**
+ * 
+ */
 router.post('/unwatchRepo', (req, response) => {
     console.log('=====>', req.headers.authorization, req.body.reposName, req.query.subscribed)
         // var accessToken = req.header.authorization

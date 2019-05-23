@@ -10,8 +10,8 @@ exports.createNote = (req, res) => {
         } else {
             const noteData = {
                 userID: req.decoded.id,
-                Title: req.body.Title,
-                Description: req.body.Description,
+                title: req.body.title,
+                description: req.body.description,
                 labelsID: req.body.labelsID
 
             }
@@ -44,9 +44,9 @@ exports.findAllNote = (req, res) => {
                 response.status = true
                 response.userID = data[0].userID
                 data.forEach(element => {
-                    array.push(element.Title)
+                    array.push(element.title)
                 })
-                response.Title = array
+                response.title = array
                 return res.status(200).send({ response })
             }
         })

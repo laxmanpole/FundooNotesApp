@@ -208,7 +208,115 @@ describe('Status and content', function() {
     describe('Add label to note', function() {
 
         it('status ', function(done) {
-            chai.request(server).post('/addlabeltoNote').send(data1.addlabeltoNote).end((err, res) => {
+            chai.request(server).put('/addlabeltoNote').send(data1.addlabeltoNote).end((err, res) => {
+                if (err) {
+                    console.log("expect ==>", err);
+                    err.should.have.status(500);
+                } else {
+                    console.log("expect ==>", res.body);
+                    res.should.have.status(200);
+                }
+                done();
+            })
+        })
+    });
+    describe('Remove label from note', function() {
+
+        it('status ', function(done) {
+            chai.request(server).put('/removelabelfromNote').send(data1.removelabelfromNote).end((err, res) => {
+                if (err) {
+                    console.log("expect ==>", err);
+                    err.should.have.status(500);
+                } else {
+                    console.log("expect ==>", res.body);
+                    res.should.have.status(200);
+                }
+                done();
+            })
+        })
+    });
+    describe('Update label from note', function() {
+
+        it('status ', function(done) {
+            chai.request(server).put('/updateNote').send(data1.updateNote).end((err, res) => {
+                if (err) {
+                    console.log("expect ==>", err);
+                    err.should.have.status(500);
+                } else {
+                    console.log("expect ==>", res.body);
+                    res.should.have.status(200);
+                }
+                done();
+            })
+        })
+    });
+    describe('Delete note', function() {
+
+        it('status ', function(done) {
+            chai.request(server).delete('/deleteNote').send(data1.deleteNote).end((err, res) => {
+                if (err) {
+                    console.log("expect ==>", err);
+                    err.should.have.status(500);
+                } else {
+                    console.log("expect ==>", res.body);
+                    res.should.have.status(200);
+                }
+                done();
+            })
+        })
+    });
+    describe('set reminder', function() {
+
+        it('status ', function(done) {
+            chai.request(server).post('/setreminder').send(data1.setreminder).end((err, res) => {
+                if (err) {
+                    console.log("expect ==>", err);
+                    err.should.have.status(500);
+                } else {
+                    console.log("expect ==>", res.body);
+                    res.should.have.status(200);
+                }
+                done();
+            })
+        })
+    });
+    describe('delete reminder', function() {
+
+        it('status ', function(done) {
+            chai.request(server).post('/deletereminder').send(data1.deletereminder).end((err, res) => {
+                if (err) {
+                    console.log("expect ==>", err);
+                    err.should.have.status(500);
+                } else {
+                    console.log("expect ==>", res.body);
+                    res.should.have.status(200);
+                }
+                done();
+            })
+        })
+    });
+})
+describe('Status and content', function() {
+    var data1 = test();
+    describe(' Archive', function() {
+
+        it('status ', function(done) {
+            chai.request(server).post('/Archive').send(data1.isArchive).end((err, res) => {
+                if (err) {
+                    console.log("expect ==>", err);
+                    err.should.have.status(500);
+                } else {
+                    console.log("expect ==>", res.body);
+                    res.should.have.status(200);
+                }
+                done();
+            })
+        })
+    });
+    describe(' Trash', function() {
+
+        it('status ', function(done) {
+            chai.request(server).post('/Trash').send(data1.isTrash).end((err, res) => {
                 if (err) {
                     console.log("expect ==>", err);
                     err.should.have.status(500);

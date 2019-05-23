@@ -24,107 +24,122 @@ function usermodel() {
 }
 var user = mongoose.model('user', userSchema);
 
+/**
+ *@description 
+ */
+
 function hash(password) {
     var salt = bcrypt.genSaltSync(10);
     var hashPassword = bcrypt.hashSync(password, salt);
     return hashPassword;
 }
 
+/**
+ *@description 
+ */
 usermodel.prototype.register = (body, callback) => {
-    try {
-        user.find({ 'email': body.email }, (err, data) => {
+        try {
+            user.find({ 'email': body.email }, (err, data) => {
 
-            if (err) {
-                console.log("Error in register user schema ");
-                return callback(err);
-            } else if (data.length > 0) {
-                var response = { "error": true, "message": "Email already exists ", "errorCode": 404 };
-                return callback(response);
-            } else {
-                const newUser = new user({
+                if (err) {
+                    console.log("Error in register user schema ");
+                    return callback(err);
+                } else if (data.length > 0) {
+                    var response = { "error": true, "message": "Email already exists ", "errorCode": 404 };
+                    return callback(response);
+                } else {
+                    const newUser = new user({
 
-                    "firstname": body.firstname,
-                    "lastname": body.lastname,
-                    "email": body.email,
-                    "password": hash(body.password),
-                    "verifyemail": false
-                });
-                newUser.save((err, result) => { //save the user in database
-                    if (err) {
-                        console.log("error came");
-                        console.log("error in model file", err);
-                        return callback(err);
-                    } else {
-                        console.log(body.firstname);
-                        // console.log("data save successfully", result);
-                        //console.log("registered successfully");
-                        callback(null, result);
-                        //console.log("no return statements ..registered successfully");
+                        "firstname": body.firstname,
+                        "lastname": body.lastname,
+                        "email": body.email,
+                        "password": hash(body.password),
+                        "verifyemail": false
+                    });
+                    newUser.save((err, result) => { //save the user in database
+                        if (err) {
+                            console.log("error came");
+                            console.log("error in model file", err);
+                            return callback(err);
+                        } else {
+                            console.log(body.firstname);
+                            // console.log("data save successfully", result);
+                            //console.log("registered successfully");
+                            callback(null, result);
+                            //console.log("no return statements ..registered successfully");
 
-                    }
-                })
-            }
-        });
-    } catch (err) {
-        console.log(err);
+                        }
+                    })
+                }
+            });
+        } catch (err) {
+            console.log(err);
+        }
+
     }
-
-}
+    /**
+     *@description 
+     */
 usermodel.prototype.verifyEmail = (req, callback) => {
-    //console.log("request------>", req.body);
-    try {
-        console.log(req.decoded.payload.user_email)
-            // updateOne() Updates a single document within the collection based on the filter.
-        user.updateOne({ email: req.decoded.payload.user_email }, { verifyemail: true }, (err, data) => {
-            if (err) {
-                console.log("Error in verifyemail ");
-                return callback(err);
-            } else {
-                return callback(null, data);
-            }
-        });
-    } catch (err) {
-        console.log(err);
+        //console.log("request------>", req.body);
+        try {
+            console.log(req.decoded.payload.user_email)
+                // updateOne() Updates a single document within the collection based on the filter.
+            user.updateOne({ email: req.decoded.payload.user_email }, { verifyemail: true }, (err, data) => {
+                if (err) {
+                    console.log("Error in verifyemail ");
+                    return callback(err);
+                } else {
+                    return callback(null, data);
+                }
+            });
+        } catch (err) {
+            console.log(err);
+        }
+
     }
-
-}
-
+    /**
+     *@description 
+     */
 usermodel.prototype.login = (body, callback) => {
-    try {
-        var obj = {};
-        console.log("data in ==>", body)
-        user.find({ "email": body.email }, (err, data) => {
-            if (err) {
-                return callback(err);
-            } else if (data.length > 0) {
-                // console.log(data.verifyemail)
-                // if (data[0].verifyemail == false) {
-                //     return callback({ "message": 'email not verify' })
-                // }
-                bcrypt.compare(body.password, data[0].password, (err, res) => {
-                    if (err) {
-                        return callback(err);
-                    } else if (res) {
-                        console.log(data);
-                        obj = data;
-                        console.log("congratz...!login successfully");
-                        return callback(null, obj);
-                    } else {
-                        console.log("incorrect password please check it once ");
-                        return callback("Incorrect password").status(500);
-                    }
-                });
-            } else {
-                console.log(body.email);
-                console.log(body.password);
-                console.log("username is not in database please check it.")
-                return callback("Invalid User");
-            }
-        });
-    } catch (err) {
-        console.log(err);
+        try {
+            var obj = {};
+            console.log("data in ==>", body)
+            user.find({ "email": body.email }, (err, data) => {
+                if (err) {
+                    return callback(err);
+                } else if (data.length > 0) {
+                    // console.log(data.verifyemail)
+                    // if (data[0].verifyemail == false) {
+                    //     return callback({ "message": 'email not verify' })
+                    // }
+                    bcrypt.compare(body.password, data[0].password, (err, res) => {
+                        if (err) {
+                            return callback(err);
+                        } else if (res) {
+                            console.log(data);
+                            obj = data;
+                            console.log("congratz...!login successfully");
+                            return callback(null, obj);
+                        } else {
+                            console.log("incorrect password please check it once ");
+                            return callback("Incorrect password").status(500);
+                        }
+                    });
+                } else {
+                    console.log(body.email);
+                    console.log(body.password);
+                    console.log("username is not in database please check it.")
+                    return callback("Invalid User");
+                }
+            });
+        } catch (err) {
+            console.log(err);
+        }
     }
-}
+    /**
+     *@description 
+     */
 usermodel.prototype.forgotPassword = (body, callback) => {
     // console.log("body in model==>",body);
     try {
@@ -146,7 +161,9 @@ usermodel.prototype.forgotPassword = (body, callback) => {
     }
 }
 
-
+/**
+ *@description 
+ */
 usermodel.prototype.resetPassword = (req, callback) => {
     //console.log("request------>", req.body);
     try {
@@ -169,48 +186,51 @@ usermodel.prototype.resetPassword = (req, callback) => {
 }
 
 usermodel.prototype.gitOauth = (req, callback) => {
-    // console.log("request------>", req);
-    try {
-        user.find({ gitID: req.profile.id }, (err, data) => {
+        // console.log("request------>", req);
+        try {
+            user.find({ gitID: req.profile.id }, (err, data) => {
 
-            if (err) {
-                console.log("Error in register user schema ");
-                return callback(err);
-            } else {
-                const newUser = new user({
-                    gitID: req.profile.id,
-                    gitUsername: req.profile.username,
-                    email: req.profile.emails[0].value,
-                    access_token: req.accessToken,
-                    "firstname": " ",
-                    "lastname": " ",
-                    "gitverify": "false",
-                    "profileurl": ""
-                });
-                //console.log("photo", req.profile.photos[0].value);
+                if (err) {
+                    console.log("Error in register user schema ");
+                    return callback(err);
+                } else {
+                    const newUser = new user({
+                        gitID: req.profile.id,
+                        gitUsername: req.profile.username,
+                        email: req.profile.emails[0].value,
+                        access_token: req.accessToken,
+                        "firstname": " ",
+                        "lastname": " ",
+                        "gitverify": "false",
+                        "profileurl": ""
+                    });
+                    //console.log("photo", req.profile.photos[0].value);
 
-                newUser.save((err, result) => { //save the user in database
-                    if (err) {
-                        console.log("error came");
-                        console.log("error in model file", err);
-                        return callback(err);
-                    } else {
+                    newUser.save((err, result) => { //save the user in database
+                        if (err) {
+                            console.log("error came");
+                            console.log("error in model file", err);
+                            return callback(err);
+                        } else {
 
-                        console.log("data save successfully", result);
-                        console.log("registered successfully");
-                        return callback(null, result);
-                        // console.log("no return statements ..registered successfully");
+                            console.log("data save successfully", result);
+                            console.log("registered successfully");
+                            return callback(null, result);
+                            // console.log("no return statements ..registered successfully");
 
-                    }
-                })
-            }
-        });
-    } catch (err) {
-        console.log(err);
+                        }
+                    })
+                }
+            });
+        } catch (err) {
+            console.log(err);
+        }
+
+
     }
-
-
-}
+    /**
+     *@description 
+     */
 usermodel.prototype.gitverify = (req, callback) => {
     //console.log("request------>", req.body);
     try {
@@ -229,6 +249,10 @@ usermodel.prototype.gitverify = (req, callback) => {
     }
 
 }
+
+/**
+ *@description 
+ */
 usermodel.prototype.setprofile = (req, callback) => {
     console.log("req data in usermodel", req.decoded, req.file.originalname, req.file.location)
     var image = req.file.originalname;
