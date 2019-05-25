@@ -36,7 +36,8 @@ function collabmodel() {}
 var collab = mongoose.model('collab', collabSchema)
 
 /**
- *@description 
+ *@description:Invite user for note collaborating and check this 
+               user are available or not in database.    
  */
 collabmodel.prototype.notecollab = (collabData, callback) => {
     try {

@@ -25,7 +25,7 @@ function labelmodel() {
 var label = mongoose.model('label', labelSchema);
 
 /**
- *@description 
+ *@description: To create a label of user and stored in database  
  */
 labelmodel.prototype.createLabel = (labelData, callback) => {
         try {
@@ -56,7 +56,7 @@ labelmodel.prototype.createLabel = (labelData, callback) => {
         }
     }
     /**
-     *@description 
+     *@description :To retrieve all label in database of particular user using id
      */
 labelmodel.prototype.findAllLabel = (req, callback) => {
         try {
@@ -78,7 +78,7 @@ labelmodel.prototype.findAllLabel = (req, callback) => {
 
     }
     /**
-     *@description 
+     *@description :To change the label name ,replace new name with old name
      */
 labelmodel.prototype.updateLabel = (req, callback) => {
         try {
@@ -99,7 +99,7 @@ labelmodel.prototype.updateLabel = (req, callback) => {
         }
     }
     /**
-     *@description 
+     *@description:To remove label from database of perticular user 
      */
 labelmodel.prototype.deleteLabel = (req, callback) => {
     try {

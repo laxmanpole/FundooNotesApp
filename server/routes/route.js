@@ -44,7 +44,7 @@ router.post('/deletereminder', notecontroller.deletereminder)
 router.post('/Archive', notecontroller.isArchive)
 router.post('/Trash', notecontroller.isTrash)
 
-router.post('/noteColabarate', middle.checkToken, colab.notecollab)
+router.post('/noteCollaborate', middle.checkToken, colab.notecollab)
 router.post('/searchNoteByTitle', middle.checkToken, search.searchNoteByTitle)
 router.post('/searchNoteByDescription', middle.checkToken, search.searchNoteByDescription)
 

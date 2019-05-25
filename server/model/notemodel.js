@@ -46,11 +46,11 @@ function notemodel() {
 var note = mongoose.model('note', noteSchema);
 
 /**
- *@description 
+ *@description:To create a note along with title and description   
  */
 notemodel.prototype.createNote = (noteData, callback) => {
         try {
-            console.log(noteData.Title);
+            console.log(noteData.title);
             note.find({ 'title': noteData.title }, (err, data) => {
 
                 if (err) {
@@ -79,7 +79,7 @@ notemodel.prototype.createNote = (noteData, callback) => {
         }
     }
     /**
-     *@description 
+     *@description:To retrieve all note from database of particular user 
      */
 notemodel.prototype.findAllNote = (req, callback) => {
     try {
@@ -100,7 +100,7 @@ notemodel.prototype.findAllNote = (req, callback) => {
 }
 
 /**
- * 
+ *@description:add label to note using labels id and note id 
  */
 notemodel.prototype.addlabeltoNote = (req, callback) => {
     try {
@@ -135,7 +135,7 @@ notemodel.prototype.addlabeltoNote = (req, callback) => {
 }
 
 /**
- * 
+ * @description:To remove label from note using labels id and note id
  */
 notemodel.prototype.removelabelfromNote = (req, callback) => {
     try {
@@ -170,7 +170,7 @@ notemodel.prototype.removelabelfromNote = (req, callback) => {
 }
 
 /**
- * 
+ * @description:To modify note like changing the title or description
  */
 notemodel.prototype.updateNote = (req, callback) => {
         try {
@@ -193,7 +193,7 @@ notemodel.prototype.updateNote = (req, callback) => {
         }
     }
     /**
-     * 
+     * @description:To remove note from database using note id
      */
 notemodel.prototype.deleteNote = (req, callback) => {
     try {
@@ -214,7 +214,7 @@ notemodel.prototype.deleteNote = (req, callback) => {
 }
 
 /**
- * 
+ * @description:To set reminder on note take a input as date
  */
 notemodel.prototype.reminder = (req, callback) => {
     try {
@@ -236,7 +236,7 @@ notemodel.prototype.reminder = (req, callback) => {
 }
 
 /**
- * 
+ * @description:To remove reminder on note ,in database reminder field will be deleted
  */
 notemodel.prototype.deletereminder = (req, callback) => {
     try {
@@ -257,7 +257,7 @@ notemodel.prototype.deletereminder = (req, callback) => {
 }
 
 /**
- * 
+ * @description:To check note is an archive or not if it is true then this note is archive
  */
 notemodel.prototype.isArchive = (req, callback) => {
         try {
@@ -277,7 +277,7 @@ notemodel.prototype.isArchive = (req, callback) => {
         }
     }
     /**
-     * 
+     * @description:To check note is an trash or not if it is true then this note is trash
      */
 notemodel.prototype.isTrash = (req, callback) => {
     try {
@@ -298,7 +298,8 @@ notemodel.prototype.isTrash = (req, callback) => {
 }
 
 /**
- * 
+ * @description:To search note in database by any character,if this character is match with any notes 
+ *              title then this note will be display.  
  */
 notemodel.prototype.searchNoteByTitle = (req, callback) => {
     try {
@@ -321,7 +322,8 @@ notemodel.prototype.searchNoteByTitle = (req, callback) => {
 }
 
 /**
- * 
+ *@description:To search note in database by any character,if this character is match with any notes 
+ *              description then this note will be display.  
  */
 notemodel.prototype.searchNoteByDescription = (req, callback) => {
     try {

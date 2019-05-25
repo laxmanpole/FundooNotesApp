@@ -59,10 +59,10 @@ describe('Status and content', function() {
                     console.log("expect ==>", err);
                     err.should.have.status(500);
                 } else {
-                    console.log("expect ==>", res.body[1].token);
-                    ltoken = res.body[1].token
-                    console.log("userid mil raha hai===>", res.body[0][0]._id)
-                    userID = res.body[0][0]._id
+                    console.log("expect ==>", res.body.token);
+                    ltoken = res.body.token
+                    console.log("userid mil raha hai===>", res.body.data[0]._id)
+                    userID = res.body.data[0]._id
                     res.should.have.status(200);
                 }
                 done();
@@ -250,21 +250,21 @@ describe('Status and content', function() {
             })
         })
     });
-    describe('Delete note', function() {
+    // describe('Delete note', function() {
 
-        it('status ', function(done) {
-            chai.request(server).delete('/deleteNote').send(data1.deleteNote).end((err, res) => {
-                if (err) {
-                    console.log("expect ==>", err);
-                    err.should.have.status(500);
-                } else {
-                    console.log("expect ==>", res.body);
-                    res.should.have.status(200);
-                }
-                done();
-            })
-        })
-    });
+    //     it('status ', function(done) {
+    //         chai.request(server).delete('/deleteNote').send(data1.deleteNote).end((err, res) => {
+    //             if (err) {
+    //                 console.log("expect ==>", err);
+    //                 err.should.have.status(500);
+    //             } else {
+    //                 console.log("expect ==>", res.body);
+    //                 res.should.have.status(200);
+    //             }
+    //             done();
+    //         })
+    //     })
+    // });
     describe('set reminder', function() {
 
         it('status ', function(done) {
@@ -328,4 +328,53 @@ describe('Status and content', function() {
             })
         })
     });
+})
+describe('Status and content', function() {
+    var data1 = test();
+    describe(' Collaborator', function() {
+
+        it('status ', function(done) {
+            chai.request(server).post('/noteCollaborate').set('token', ltoken).send(data1.notecollaborate).end((err, res) => {
+                if (err) {
+                    console.log("expect ==>", err);
+                    err.should.have.status(500);
+                } else {
+                    console.log("expect ==>", res.body);
+                    res.should.have.status(200);
+                }
+                done();
+            })
+        })
+    });
+    describe(' Search Note By Title', function() {
+
+        it('status ', function(done) {
+            chai.request(server).post('/searchNoteByTitle').set('token', ltoken).send(data1.searchNoteByTitle).end((err, res) => {
+                if (err) {
+                    console.log("expect ==>", err);
+                    err.should.have.status(500);
+                } else {
+                    console.log("expect ==>", res.body);
+                    res.should.have.status(200);
+                }
+                done();
+            })
+        })
+    });
+    describe(' Search Note By Description', function() {
+
+        it('status ', function(done) {
+            chai.request(server).post('/searchNoteByDescription').set('token', ltoken).send(data1.searchNoteByDescription).end((err, res) => {
+                if (err) {
+                    console.log("expect ==>", err);
+                    err.should.have.status(500);
+                } else {
+                    console.log("expect ==>", res.body);
+                    res.should.have.status(200);
+                }
+                done();
+            })
+        })
+    });
+
 })

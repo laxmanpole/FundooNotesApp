@@ -66,41 +66,15 @@ module.exports.register = (req, res) => {
                 }
             ]
             async.series(tasks, (err, results) => {
-                    // console.log("result mil gaya===>", results)
-                    if (err) {
-                        console.log(err)
-                        return (err)
-                    } else {
-                        console.log('result mil gaya===>', results) // this gets executed with proper results
-                        return res.json(results)
-                    }
-                })
-                // userService.register(req.body, (err, data) => {
-                //     if (err) {
-                //         console.log(err)
-                //         return res.status(500).send({
-                //             message: err
-                //         })
-                //     } else {
-                //         console.log('data in controller========>', data.email)
-
-            //         const payload = {
-            //                 user_email: data.email
-            //             }
-            //             //  console.log(payload)
-            //         const obj = gentoken.GenerateToken(payload)
-            //         const url = `http://localhost:3000/verifyemail/${obj.token}`
-            //         console.log('url in controller', url)
-
-            //         sendmail.sendEMailFunction(url, req.body.email)
-
-            //         res.status(200).send({
-            //             success: true,
-            //             message: 'User register successfully '
-
-            //         })
-            //     }
-            // })
+                // console.log("result mil gaya===>", results)
+                if (err) {
+                    console.log(err)
+                    return (err)
+                } else {
+                    console.log('result mil gaya===>', results) // this gets executed with proper results
+                    return res.json(results)
+                }
+            })
 
         }
     } catch (err) {
@@ -145,73 +119,35 @@ module.exports.login = (req, res) => {
                 response.error = errors
                 return res.status(422).send(response)
             } else {
-                var data1 = {}
-                async.parallel([
-                            function(callback) {
-                                userService.login(req.body, (err, data) => {
-                                    if (err) {
-                                        callback(null, err)
-                                    } else {
-                                        console.log('series data===>', data)
-                                        data1 = data
-                                        callback(null, data)
-                                    }
-                                })
-                            },
-                            function(callback) {
-                                setTimeout(function() {
-                                    var token = jwt.sign({ id: data1[0]._id }, process.env.SECRETKEY, { expiresIn: 86400000 })
-                                        //var userId = data1[0]._id
+                async.waterfall([
+                        function one(callback) {
+                            userService.login(req.body, (err, data) => {
+                                if (err) {
+                                    callback(null, err)
+                                } else {
+                                    console.log(' data===>', data)
+                                    callback(null, data)
+                                }
+                            })
+                        },
+                        function two(data, callback) {
+                            var token = jwt.sign({ id: data[0]._id }, process.env.SECRETKEY, { expiresIn: 86400000 })
+                            var userId = data[0]._id
+                            client.set(userId, token, redis.print)
+                            callback(null, { data, "token": token });
+                        }
+                    ],
+                    // optional callback
+                    function(err, results) {
+                        if (err) {
+                            console.log(err)
+                            return res.json(err)
+                        } else {
+                            console.log(results)
+                            return res.json(results)
+                        }
 
-                                    // client.set(userId, token, redis.print)
-                                    callback(null, { "token": token });
-                                }, 400);
-
-                            }
-                        ],
-                        // optional callback
-                        function(err, results) {
-                            if (err) {
-                                console.log(err)
-                                return res.json(err)
-                            } else {
-                                console.log(results)
-                                return res.json(results)
-                            }
-
-                        })
-                    // userService.login(req.body, (err, data) => {
-                    //     if (err) {
-                    //         return res.status(500).send({
-                    //             message: err
-                    //         })
-                    //     } else {
-                    //         var token = jwt.sign({ id: data[0]._id }, process.env.SECRETKEY, { expiresIn: 86400000 })
-                    //         var userId = data[0]._id
-                    //             // console.log("res",res[0].body)
-
-                //         client.set(userId, token, redis.print)
-                //         client.get(userId, function(error, result) {
-                //                 if (error) throw error
-                //                 console.log('Redis working properly ->', result)
-                //             })
-                //             // client.hset("record", userId, token, redis.print) //token stored in redis
-                //             // client.hgetall("record", function(error, result) {
-                //             //     if (error) throw error
-                //             //     console.log('Redis working properly ->', result)
-                //             // })
-                //         return res.status(200).send({
-                //             'success': true,
-                //             'message': 'Login successfully',
-                //             'data': {
-                //                 'userId': data[0]._id,
-                //                 'name': data[0].firstname,
-                //                 'email': data[0].email,
-                //                 'token': token
-                //             }
-                //         })
-                //     }
-                // })
+                    })
             }
         } catch (err) {
             console.log(err)

@@ -24,9 +24,6 @@ function usermodel() {
 }
 var user = mongoose.model('user', userSchema);
 
-/**
- *@description 
- */
 
 function hash(password) {
     var salt = bcrypt.genSaltSync(10);
@@ -35,7 +32,7 @@ function hash(password) {
 }
 
 /**
- *@description 
+ *@description:To store new user data and check it is an existed user or not 
  */
 usermodel.prototype.register = (body, callback) => {
         try {
@@ -78,7 +75,7 @@ usermodel.prototype.register = (body, callback) => {
 
     }
     /**
-     *@description 
+     *@description:to verify user email by using token and set its valid user  
      */
 usermodel.prototype.verifyEmail = (req, callback) => {
         //console.log("request------>", req.body);
@@ -99,7 +96,8 @@ usermodel.prototype.verifyEmail = (req, callback) => {
 
     }
     /**
-     *@description 
+     *@description:user login with email and password check whether email is existed or not in database
+     *             decrypt the password check this password is correct or not that user
      */
 usermodel.prototype.login = (body, callback) => {
         try {
@@ -138,7 +136,7 @@ usermodel.prototype.login = (body, callback) => {
         }
     }
     /**
-     *@description 
+     *@description:when a user forgots the password and to recover back the acccount 
      */
 usermodel.prototype.forgotPassword = (body, callback) => {
     // console.log("body in model==>",body);
@@ -162,29 +160,33 @@ usermodel.prototype.forgotPassword = (body, callback) => {
 }
 
 /**
- *@description 
+ *@description:To handle reset password
+ *@purpose :to reset the password and get back the accesss to the account 
  */
 usermodel.prototype.resetPassword = (req, callback) => {
-    //console.log("request------>", req.body);
-    try {
-        let newpassword = bcrypt.hashSync(req.body.password, 10);
-        console.log("new password bcrypt --->", newpassword);
+        //console.log("request------>", req.body);
+        try {
+            let newpassword = bcrypt.hashSync(req.body.password, 10);
+            console.log("new password bcrypt --->", newpassword);
 
-        // updateOne() Updates a single document within the collection based on the filter.
-        user.updateOne({ _id: req.decoded.payload.user_id }, { password: newpassword }, (err, data) => {
-            if (err) {
-                console.log("Error in user resetPassword ");
-                return callback(err);
-            } else {
-                return callback(null, data);
-            }
-        });
-    } catch (err) {
-        console.log(err);
+            // updateOne() Updates a single document within the collection based on the filter.
+            user.updateOne({ _id: req.decoded.payload.user_id }, { password: newpassword }, (err, data) => {
+                if (err) {
+                    console.log("Error in user resetPassword ");
+                    return callback(err);
+                } else {
+                    return callback(null, data);
+                }
+            });
+        } catch (err) {
+            console.log(err);
+        }
+
     }
-
-}
-
+    /**
+     *@description:Social Login with Github
+     *@purpose :login with github and store the user data in database 
+     */
 usermodel.prototype.gitOauth = (req, callback) => {
         // console.log("request------>", req);
         try {
@@ -229,7 +231,7 @@ usermodel.prototype.gitOauth = (req, callback) => {
 
     }
     /**
-     *@description 
+     *@description:to verify gituser using the user access_token and grant user to secure access delegation 
      */
 usermodel.prototype.gitverify = (req, callback) => {
     //console.log("request------>", req.body);
@@ -251,7 +253,7 @@ usermodel.prototype.gitverify = (req, callback) => {
 }
 
 /**
- *@description 
+ *@description:To store the github user profile picture into AWS 
  */
 usermodel.prototype.setprofile = (req, callback) => {
     console.log("req data in usermodel", req.decoded, req.file.originalname, req.file.location)

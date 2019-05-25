@@ -63,6 +63,16 @@
     "isTrash": {
         "noteID": "5ccc131fdfd60438ecfc0240"
 
+    },
+    "notecollaborate": {
+        "noteID": "5ce68b32509f566301aa0a98",
+        "collabID": "5ce3a2c42d2ee2326f77e34b"
+    },
+    "searchNoteByTitle": {
+        "searchNote": "d"
+    },
+    "searchNoteByDescription": {
+        "searchNote": "d"
     }
 
 
