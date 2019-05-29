@@ -15,7 +15,6 @@
 * @since :03-04-2018
 
 *********************************************************************************************************/
-
 // import the express and controller function
 var userService = require('../services/service')
 var jwt = require('jsonwebtoken')
