@@ -22,9 +22,10 @@ var jwt = require('jsonwebtoken')
 var gentoken = require('../middleware/token')
 var sendmail = require('../middleware/sendmail')
 var async = require('async')
-
-// To handle the registration of new user.
-// request from client and response from server.
+    /**
+     *@description: To handle the registration of new user.
+     *             request from client and response from server.
+     */
 module.exports.register = (req, res) => {
     try {
         req.checkBody('firstname', 'Firstname is not valid').isLength({ min: 3 }).isAlpha()
@@ -75,7 +76,6 @@ module.exports.register = (req, res) => {
                     return res.json(results)
                 }
             })
-
         }
     } catch (err) {
         console.log(err)
@@ -103,8 +103,10 @@ module.exports.verifyEmail = (req, res) => {
             console.log(err)
         }
     }
-    // To handle the Login for registered user.
-    // request from client and response from server.
+    /**
+     * @description:To handle the Login for registered user.
+     *              request from client and response from server.
+     */
 module.exports.login = (req, res) => {
         try {
             console.log('req in controller', req.body)
@@ -133,8 +135,8 @@ module.exports.login = (req, res) => {
                         function two(data, callback) {
                             var token = jwt.sign({ id: data[0]._id }, process.env.SECRETKEY, { expiresIn: 86400000 })
                             var userId = data[0]._id
-                            client.set(userId, token, redis.print)
-                            callback(null, { data, "token": token });
+                            client.set('key' + userId, token, redis.print)
+                            callback(null, { data, 'token': token })
                         }
                     ],
                     // optional callback
@@ -146,14 +148,16 @@ module.exports.login = (req, res) => {
                             console.log(results)
                             return res.json(results)
                         }
-
                     })
             }
         } catch (err) {
             console.log(err)
         }
     }
-    // To handle forgot password 
+    /**
+     * @description: To handle forgot password 
+     */
+
 module.exports.forgotPassword = (req, res) => {
         try {
             req.checkBody('email', 'Email is not valid').isEmail()
@@ -201,7 +205,10 @@ module.exports.forgotPassword = (req, res) => {
             console.log(err)
         }
     }
-    // To handle reset password and update new password
+    /**
+     *@description:  To handle reset password and update new password
+     */
+
 exports.resetPassword = (req, res) => {
     try {
         console.log('inside forgotPassword')
@@ -224,6 +231,103 @@ exports.resetPassword = (req, res) => {
                         'success': true,
                         'message': 'Password successfully modified'
                     })
+                }
+            })
+        }
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+exports.gitverify = (req, res) => {
+    try {
+        console.log('inside gitverify')
+        userService.gitverify(req, (err, data) => {
+            if (err) {
+                console.log(err)
+                return res.status(500).send({
+                    message: err
+                })
+            } else {
+                return res.status(200).send({
+                    message: data
+                })
+            }
+        })
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+/**
+ * @description:To search a note in database by taking as character. 
+ */
+module.exports.searchNoteByTitle = (req, res) => {
+        try {
+            console.log('req data', req.decoded.id)
+            var array = []
+            var response = {}
+            if (req.decoded.length > 0 && req.length > 0) {
+                response.success = false
+                response.error = { 'mesaage': 'token is not provided' }
+                return res.status(422).send(response)
+            } else {
+                const searchData = {
+                    userID: req.decoded.id,
+                    title: req.body.searchNote
+                }
+                userService.searchNoteByTitle(searchData, (err, data) => {
+                    if (err) {
+                        console.log(err)
+                        return res.status(500).send({
+                            message: err
+                        })
+                    } else {
+                        response.status = true
+                            // response.userID = data[0].userID
+                        data.forEach(element => {
+                            array.push(element.title)
+                        })
+                        response.title = array
+                        return res.status(200).send(response)
+                    }
+                })
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    /**
+     * @description:To search a note through description in database by taking as character. 
+     */
+module.exports.searchNoteByDescription = (req, res) => {
+    try {
+        console.log('req data', req.decoded.id)
+        var array = []
+        var response = {}
+        if (req.decoded.length <= 0) {
+            response.success = false
+            response.error = { 'mesaage': 'token is not provided' }
+            return res.status(422).send(response)
+        } else {
+            const searchData = {
+                userID: req.decoded.id,
+                description: req.body.searchNote
+            }
+            userService.searchNoteByDescription(searchData, (err, data) => {
+                if (err) {
+                    console.log(err)
+                    return res.status(500).send({
+                        message: err
+                    })
+                } else {
+                    response.status = true
+                    response.userID = data[0].userID
+                    data.forEach(element => {
+                        array.push(element.title)
+                    })
+                    response.title = array
+                    return res.status(200).send(response)
                 }
             })
         }

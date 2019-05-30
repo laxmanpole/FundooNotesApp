@@ -5,7 +5,6 @@ const labelcontroller = require('../controller/labelcontroller')
 const notecontroller = require('../controller/notecontroller')
 const profile = require('../controller/profilecontroller')
 const colab = require('../controller/colabcontroller')
-const search = require('../controller/searchcontroller')
 const middle = require('../authentication/index')
 const upload = require('../services/fileupload')
 
@@ -45,8 +44,8 @@ router.post('/Archive', notecontroller.isArchive)
 router.post('/Trash', notecontroller.isTrash)
 
 router.post('/noteCollaborate', middle.checkToken, colab.notecollab)
-router.post('/searchNoteByTitle', middle.checkToken, search.searchNoteByTitle)
-router.post('/searchNoteByDescription', middle.checkToken, search.searchNoteByDescription)
+router.post('/searchNoteByTitle', middle.checkToken, cntuser.searchNoteByTitle)
+router.post('/searchNoteByDescription', middle.checkToken, cntuser.searchNoteByDescription)
 
 
 

@@ -25,10 +25,6 @@ app.use(session({
     saveUninitialized: true
 }))
 
-// Configuring the database
-
-
-
 // listen for requests
 app.listen(process.env.PORT, () => {
         console.log('Server is listening on port 3000')

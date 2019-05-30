@@ -3,13 +3,13 @@ const router = express.Router()
 const passport = require('passport')
 const GithubStrategy = require('passport-github')
 var jwt = require('jsonwebtoken')
-const usermodel = require('../model/usermodel')
-const gitcontroller = require('../controller/gitcontroller')
+const service = require('../services/service')
+const controller = require('../controller/controller')
 const middle = require('../authentication/index')
 const axios = require('axios')
 
 /**
- * 
+ *@description:Social login for Github Account using passport strategies.  
  */
 passport.use(new GithubStrategy({
         clientID: process.env.CLIENT_ID,
@@ -21,7 +21,7 @@ passport.use(new GithubStrategy({
         // console.log("profile", profile)
 
         var req = { accessToken, profile }
-        usermodel.gitOauth(req, (err, data) => {
+        service.gitOauth(req, (err, data) => {
             if (err) {
                 console.log(err)
                 done(err)
@@ -37,10 +37,10 @@ passport.use(new GithubStrategy({
 router.route('/github').get(passport.authenticate('github', { scope: 'repo' }))
 router.route('/auth/github').get(passport.authenticate('github'))
 
-router.post('/gitverify/:token', middle.checkToken, gitcontroller.gitverify)
+router.post('/gitverify/:token', middle.checkToken, controller.gitverify)
 
 /**
- * 
+ * @description:Creating new branch of given user. 
  */
 router.post('/createBranch', (req, response) => {
     console.log('fjhbf', req.headers.authorization)
@@ -101,7 +101,7 @@ router.post('/createBranch', (req, response) => {
 })
 
 /**
- * 
+ * @description:Deleting exist branch of given user.
  */
 router.post('/deleteBranch', (req, response) => {
     console.log('fjhbf', req.headers.authorization, req.body.branchName)
@@ -130,7 +130,7 @@ router.post('/deleteBranch', (req, response) => {
 })
 
 /**
- * 
+ * @description:To star the repository of github user
  */
 router.post('/starRepo', (req, response) => {
         console.log('fjhbf', req.headers.authorization, req.body.reposName)
@@ -159,7 +159,7 @@ router.post('/starRepo', (req, response) => {
             })
     })
     /**
-     * 
+     * @description:To remove star from repository of github user
      */
 router.post('/unstarRepo', (req, response) => {
     console.log('fjhbf', req.headers.authorization, req.body.reposName)
@@ -192,7 +192,7 @@ router.post('/unstarRepo', (req, response) => {
 })
 
 /**
- * 
+ *@description:To make watch repository of github user. 
  */
 router.post('/watchRepo', (req, response) => {
     console.log('fjhbf', req.headers.authorization, req.body.reposName, req.query.subscribed)
@@ -222,7 +222,7 @@ router.post('/watchRepo', (req, response) => {
 })
 
 /**
- * 
+ *@description:To make unwatch repository of github user.  
  */
 router.post('/unwatchRepo', (req, response) => {
     console.log('=====>', req.headers.authorization, req.body.reposName, req.query.subscribed)

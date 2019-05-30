@@ -9,6 +9,7 @@ var ltoken;
 var ftoken;
 var userID;
 var labelID;
+var rtoken;
 
 function test() {
 
@@ -27,30 +28,31 @@ describe('Status and content', function() {
                     console.log("expect ==>", err);
                     err.should.have.status(500);
                 } else {
-                    console.log("registration token ==>", res.body);
-                    //var rtoken = res.body.token
+                    console.log("registration token ==>", res.body[1]);
+
+                    rtoken = res.body[1]
                     res.should.have.status(200);
                 }
                 done();
             })
         })
     });
-    // describe("verifyEmail", function() {
-    //     var data1 = test();
-    //     it('status ', function(done) {
-    //         chai.request(server).post(`/verifyEmail/${rtoken}`).set('token', rtoken).send(data1.verifyEmail).end((err, res) => {
-    //             if (err) {
-    //                 console.log("expect ==>", err);
-    //                 err.should.have.status(500);
-    //             } else {
-    //                 console.log("expect ==>", res.body);
+    describe("verifyEmail", function() {
+        var data1 = test();
+        it('status ', function(done) {
+            chai.request(server).post(`/verifyemail/${rtoken}`).set('token', rtoken).end((err, res) => {
+                if (err) {
+                    console.log("expect ==>", err);
+                    err.should.have.status(500);
+                } else {
+                    console.log("expect ==>", res.body);
 
-    //                 res.should.have.status(200);
-    //             }
-    //             done();
-    //         })
-    //     })
-    // });
+                    res.should.have.status(200);
+                }
+                done();
+            })
+        })
+    });
     describe('login page', function() {
         //var data1 = test();
         it('status ', function(done) {

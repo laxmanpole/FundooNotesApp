@@ -3,7 +3,9 @@ const multer = require('multer')
 const multerS3 = require('multer-s3')
 require('dotenv').config();
 
-
+/**
+ *@description:upload profile picture of user in aws s3 using multer middleware  
+ */
 
 const s3 = new aws.S3({
         secretAccessKey: process.env.SECRETACCESSKEY,
