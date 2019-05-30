@@ -15,7 +15,6 @@
 * @since :03-04-2018
 
 *********************************************************************************************************/
-
 // import the express and controller function
 var userService = require('../services/service')
 var jwt = require('jsonwebtoken')
@@ -238,6 +237,7 @@ exports.resetPassword = (req, res) => {
         console.log(err)
     }
 }
+<<<<<<< HEAD
 
 exports.gitverify = (req, res) => {
     try {
@@ -335,3 +335,5 @@ module.exports.searchNoteByDescription = (req, res) => {
         console.log(err)
     }
 }
+=======
+>>>>>>> fc6357959f2e6bb1a81698c887298c6a4ccad6ca
