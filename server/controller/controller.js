@@ -335,5 +335,4 @@ module.exports.searchNoteByDescription = (req, res) => {
         console.log(err)
     }
 }
-=======
->>>>>>> fc6357959f2e6bb1a81698c887298c6a4ccad6ca
+
