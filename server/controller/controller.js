@@ -237,7 +237,7 @@ exports.resetPassword = (req, res) => {
         console.log(err)
     }
 }
-<<<<<<< HEAD
+
 
 exports.gitverify = (req, res) => {
     try {
